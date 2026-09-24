@@ -16,3 +16,9 @@ sbom-rpg-api.*.json
 
 .venv-bandit/
 .venv-semgrep/
+
+terraform/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+terraform/*-config
