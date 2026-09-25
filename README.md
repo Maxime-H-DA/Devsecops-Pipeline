@@ -123,30 +123,23 @@ kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
 
 L'API est alors accessible sur **http://localhost:5000**
 
+### Terraform
+
+Le cluster et tout ce qu'il contient sont décrits dans `terraform/` : cluster Kind, Kyverno et ses 4 policies, Vault et le déploiement de l'API, avec des versions de charts figées. Deux `terraform apply` (le cluster d'abord, puis le reste) reconstruisent l'ensemble dans le bon ordre. Seule l'ouverture de Vault reste manuelle, pour que ses clés ne passent jamais par le state Terraform.
+
 ### Gestion des secrets avec Vault
 
-Les identifiants applicatifs ne sont plus stockés dans un `Secret` Kubernetes, seulement encodé en base64 dans etcd et lisible en une commande : ils sont chiffrés dans Vault, et injectés au démarrage du pod par un sidecar. Chaque pod s'authentifie avec son propre ServiceAccount, reçoit un accès en lecture seule à durée limitée, sans jamais détenir de credential statique.
+Les identifiants applicatifs ne sont plus stockés dans un `Secret` Kubernetes, seulement encodé en base64 dans etcd et lisible en une commande : ils sont chiffrés dans Vault, et injectés au démarrage du pod par un sidecar. Chaque pod s'authentifie avec son propre ServiceAccount, reçoit un accès en lecture seule à durée limitée, sans jamais détenir de credential statique. Le token root est révoqué dès la configuration terminée.
 
 ```
-kind create cluster --config k8s/kind-config.yaml
+cd terraform
+terraform init
+terraform apply "-target=kind_cluster.rpg"
+terraform apply
+cd ..
 
 docker build -t rpg-api:local -f rpg-api/Dockerfile .
 kind load docker-image rpg-api:local --name rpg-pipeline
-
-kubectl apply -f k8s/00-namespace.yaml
-kubectl apply -f k8s/05-pvc.yaml
-kubectl apply -f k8s/06-serviceaccount.yaml
-
-helm repo add hashicorp https://helm.releases.hashicorp.com
-helm repo add kyverno https://kyverno.github.io/kyverno/
-helm repo update
-
-helm install kyverno kyverno/kyverno --namespace kyverno --create-namespace
-kubectl wait --for condition=established --timeout=120s crd/clusterpolicies.kyverno.io
-kubectl apply -f policies/
-
-helm install vault hashicorp/vault --namespace vault --create-namespace -f vault/vault-values.yaml
-kubectl wait --for=jsonpath='{.status.phase}'=Running --timeout=120s pod/vault-0 -n vault
 
 $init = kubectl exec -n vault vault-0 -- vault operator init -key-shares=5 -key-threshold=3 -format=json | ConvertFrom-Json
 $keys = $init.unseal_keys_b64
@@ -155,7 +148,7 @@ $token = $init.root_token
 kubectl exec -n vault vault-0 -- vault operator unseal $keys[0]
 kubectl exec -n vault vault-0 -- vault operator unseal $keys[1]
 kubectl exec -n vault vault-0 -- vault operator unseal $keys[2]
-kubectl exec -n vault vault-0 -- vault login $token
+kubectl exec -n vault vault-0 -- vault login -no-print $token
 
 kubectl exec -n vault vault-0 -- vault auth enable kubernetes
 kubectl exec -n vault vault-0 -- vault write auth/kubernetes/config kubernetes_host="https://kubernetes.default.svc:443"
@@ -169,10 +162,10 @@ kubectl exec -n vault vault-0 -- chmod u+x /vault/audit
 kubectl exec -n vault vault-0 -- vault audit enable file file_path=/vault/audit/audit.log
 
 .\vault\seed-secrets.ps1
+kubectl exec -n vault vault-0 -- vault token revoke -self
 
-kubectl apply -f k8s/02-deployment.yaml
-kubectl apply -f k8s/03-service.yaml
-kubectl apply -f k8s/04-networkpolicy.yaml
+kubectl rollout restart deployment/rpg-api -n rpg-pipeline
+$keys
 
 kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
 ```
@@ -191,7 +184,7 @@ py play.py
 
 ## Outils utilisés
 
-- **CI/CD & infrastructure** : GitHub Actions, Docker, Kubernetes (Kind), Helm, Alpine Linux, Dependabot
+- **CI/CD & infrastructure** : GitHub Actions, Docker, Kubernetes (Kind), Helm, Terraform, Alpine Linux, Dependabot
 - **Sécurité** : Gitleaks, Trivy, Bandit, Semgrep, OWASP ZAP, Cppcheck, Checkov, Kyverno, Syft, Cosign, HashiCorp Vault
 - **Backend & tests** : Flask, SQLite, JWT, pytest
 
