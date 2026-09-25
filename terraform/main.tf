@@ -87,3 +87,15 @@ resource "kubectl_manifest" "rpg_networkpolicy" {
   yaml_body = file("${path.module}/../k8s/04-networkpolicy.yaml")
   depends_on = [kubectl_manifest.rpg_namespace]
 }
+
+
+resource "helm_release" "monitoring" {
+  name = "monitoring"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart = "kube-prometheus-stack"
+  version = "91.5.2"
+  namespace = "monitoring"
+  create_namespace = true
+  values = [file("${path.module}/../monitoring/values.yaml")]
+  timeout = 600
+}
