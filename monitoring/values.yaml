@@ -1,0 +1,9 @@
+alertmanager:
+  enabled: false
+
+grafana:
+  adminPassword: ""
+
+prometheus-node-exporter:
+  hostRootFsMount:
+    enabled: false

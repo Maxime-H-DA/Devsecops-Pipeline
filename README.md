@@ -4,7 +4,7 @@
 
 Pipeline CI/CD sécurisé autour de mon projet RPG en C++ : vérification automatique du code, compilation dans un environnement isolé, et détection de failles de sécurité à chaque modification (SAST, DAST, scan de conteneurs, sécurité supply chain, déploiement Kubernetes).
 
-L'idée était de prendre un vrai projet et de lui appliquer des pratiques qu'on retrouve en entreprise.
+L'idée était de prendre un vrai projet et de lui appliquer des pratiques qu'on retrouve en entreprise. Le projet a grandi par étapes : d'abord le pipeline de sécurité, puis le déploiement sur Kubernetes, puis Vault pour les secrets, Terraform pour ne plus tout relancer à la main, et enfin la supervision. Chaque étape est partie d'un problème rencontré à l'étape d'avant.
 
 ## Avant même le push
 
@@ -57,11 +57,11 @@ Les manifests Kubernetes et le chart Helm sont analysés à chaque push. Le prem
 
 #### Test des policies Kyverno
 
-Les 4 règles Kyverno (voir section Kubernetes) sont rejouées contre les manifests via la CLI officielle, sans avoir besoin d'un cluster actif. Si une future modification des manifests casse une règle, la PR échoue avant le merge : pas besoin d'avoir son cluster Kind lancé pour le découvrir.
+Les 4 règles Kyverno (`policies/` : non-root obligatoire, pas de conteneur privilégié, limites CPU/mémoire obligatoires, pas de tag `latest`) sont rejouées contre les manifests via la CLI officielle, sans avoir besoin d'un cluster actif. Si une future modification des manifests casse une règle, la PR échoue avant le merge : pas besoin d'avoir son cluster Kind lancé pour le découvrir.
 
 #### Tests unitaires (pytest)
 
-L'API est couverte par 36 tests unitaires : authentification JWT, validation des données, gestion des erreurs, headers de sécurité, lecture des secrets depuis fichiers montés ou variables d'environnement. Les tests tournent sur une base SQLite isolée pour ne pas polluer les données de production.
+L'API est couverte par 40 tests unitaires : authentification JWT, validation des données, gestion des erreurs, headers de sécurité, lecture des secrets depuis fichiers montés ou variables d'environnement, et refus de démarrer si un secret manque. Les tests tournent sur une base SQLite isolée pour ne pas polluer les données de production.
 
 ## Résultats centralisés
 
@@ -73,7 +73,7 @@ Dependabot surveille en continu les actions GitHub, les dépendances Python de l
 
 ## L'API du bestiaire
 
-Une API Flask déployée sur [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com) qui expose les données des monstres du jeu. La lecture est libre, les modifications nécessitent une connexion avec identifiant et mot de passe.
+Une API Flask déployée sur [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com) qui expose les données des monstres du jeu. La lecture est libre, les modifications nécessitent une connexion avec identifiant et mot de passe. L'API refuse de démarrer si l'un de ses secrets est absent, plutôt que de retomber sur des valeurs par défaut, et compare les identifiants en temps constant pour ne rien laisser deviner par le temps de réponse.
 
 ### Docker
 
@@ -87,6 +87,8 @@ docker run -d -p 5000:5000 --env-file .env -v rpg-data:/app/data rpg-api
 L'API est alors accessible sur **http://localhost:5000**
 
 ### Kubernetes
+
+C'est la première version du déploiement, avant Vault. Les secrets de l'API passaient par un `Secret` Kubernetes créé depuis `.env`. En avançant, je me suis rendu compte qu'un Secret n'est qu'encodé en base64 : n'importe qui ayant accès au cluster peut le lire en une commande. C'est ce qui m'a amené à Vault (plus bas). Je garde cette version parce qu'elle reste la plus simple à lancer, et qu'elle montre d'où je suis parti.
 
 L'API tourne aussi sur un cluster Kubernetes local avec Kind. Le conteneur s'exécute en non-root avec un système de fichiers en lecture seule, des ressources CPU et mémoire limitées, et des probes de santé qui surveillent que l'API répond. Les secrets sont injectés sous forme de fichiers montés plutôt qu'en variables d'environnement. Les 2 réplicas partagent un volume persistant (PVC) pour la base SQLite : sans ça, chaque pod aurait sa propre base isolée et les données auraient été incohérentes selon le pod qui répondait.
 
@@ -172,6 +174,24 @@ kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
 
 L'API est alors accessible sur **http://localhost:5000**
 
+### Supervision : Prometheus et Grafana
+
+Prometheus relève en continu l'état du cluster (CPU, mémoire, redémarrages, état des pods) et Grafana l'affiche en tableaux de bord. Installés par Terraform comme le reste, avec un mot de passe administrateur Grafana généré aléatoirement dans le cluster au lieu de la valeur par défaut du chart, connue de tous.
+
+La supervision a servi dès le premier tableau de bord : un pod de l'API consommait moins de ressources que les autres, parce qu'il tournait **sans le sidecar Vault**, donc sans ses secrets. L'enquête a remonté trois défauts du même type, à trois niveaux :
+
+- **Injection :** le webhook de l'injecteur Vault était en mode *fail-open*. Un pod créé avant que l'injecteur soit prêt passait sans sidecar, en silence. Passé en *fail-closed* (`failurePolicy: Fail`) : la création est refusée jusqu'à ce que l'injecteur réponde.
+- **Configuration :** la policy Vault n'avait pas été chargée. Le token root, déjà révoqué, a été régénéré à partir de 3 clés de déverrouillage (`vault operator generate-root`) sans reconstruire Vault.
+- **Application :** faute de secrets, l'API retombait sur des valeurs par défaut codées en dur (`admin` / `password`, clé JWT `changeme`), qu'aucun outil d'analyse statique n'avait signalées. Elle refuse désormais de démarrer si un secret manque.
+
+```
+$pw = kubectl get secret monitoring-grafana -n monitoring -o jsonpath="{.data.admin-password}"
+[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($pw))
+kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
+```
+
+Grafana est alors accessible sur **http://localhost:3000** (utilisateur `admin`).
+
 ## Synchronisation avec le jeu
 
 Pour jouer avec les données en ligne plutôt que les données locales :
@@ -187,6 +207,7 @@ py play.py
 - **CI/CD & infrastructure** : GitHub Actions, Docker, Kubernetes (Kind), Helm, Terraform, Alpine Linux, Dependabot
 - **Sécurité** : Gitleaks, Trivy, Bandit, Semgrep, OWASP ZAP, Cppcheck, Checkov, Kyverno, Syft, Cosign, HashiCorp Vault
 - **Backend & tests** : Flask, SQLite, JWT, pytest
+- **Observabilité** : Prometheus, Grafana
 
 ## Projet source
 

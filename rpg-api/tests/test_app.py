@@ -12,7 +12,7 @@ from app import app as flask_app
 from app import read_secret
 from app import get_db
 
-SECRET = "changeme"  # nosemgrep: python.jwt.security.jwt-hardcode.jwt-python-hardcoded-secretp.py)
+SECRET = "changeme"  # nosemgrep: python.jwt.security.jwt-hardcode.jwt-python-hardcoded-secret
 
 @pytest.fixture(autouse=True)
 def secrets_de_test(monkeypatch):
@@ -96,6 +96,27 @@ def test_login_mauvais_username(client):
 def test_login_sans_donnees(client):
     assert client.post("/login", json=None, content_type="application/json").status_code == 400
 
+def test_login_sans_mot_de_passe(client):
+    assert client.post("/login", json={"username": "admin"}).status_code == 401
+
+
+def test_ajouter_monstre_sans_donnees(client, token_valide):
+    reponse = client.post(
+        "/monstres",
+        json=None,
+        content_type="application/json",
+        headers={"Authorization": f"Bearer {token_valide}"},
+    )
+    assert reponse.status_code == 400
+
+
+def test_ajouter_monstre_json_liste(client, token_valide):
+    reponse = client.post(
+        "/monstres",
+        json=["pas", "un", "objet"],
+        headers={"Authorization": f"Bearer {token_valide}"},
+    )
+    assert reponse.status_code == 400
 
 def test_get_monstres(client):
     reponse = client.get("/monstres")
@@ -304,7 +325,7 @@ def test_header_cache_control_api(client):
 
 def test_read_secret_lit_la_variable_env_si_aucun_fichier(monkeypatch):
     monkeypatch.setenv("MA_VAR_TEST", "valeur-env")
-    resultat = read_secret("MA_VAR_TEST", "/chemin/qui/nexiste/pas", "defaut")
+    resultat = read_secret("MA_VAR_TEST", "/chemin/qui/nexiste/pas")
     assert resultat == "valeur-env"
 
 
@@ -312,24 +333,32 @@ def test_read_secret_priorise_le_fichier_sur_la_variable_env(tmp_path, monkeypat
     fichier = tmp_path / "mon-secret"
     fichier.write_text("valeur-du-fichier\n")
     monkeypatch.setenv("MA_VAR_TEST", "valeur-env")
-    resultat = read_secret("MA_VAR_TEST", str(fichier), "defaut")
+    resultat = read_secret("MA_VAR_TEST", str(fichier))
     assert resultat == "valeur-du-fichier"
 
 
 def test_read_secret_nettoie_espaces_et_retours_ligne(tmp_path):
     fichier = tmp_path / "mon-secret"
     fichier.write_text("  Xk9$mQ2!vL8pR4#nW7zT3@  \n\n")
-    resultat = read_secret("MA_VAR_INEXISTANTE", str(fichier), "defaut")
+    resultat = read_secret("MA_VAR_INEXISTANTE", str(fichier))
     assert resultat == "Xk9$mQ2!vL8pR4#nW7zT3@"
 
 
-def test_read_secret_retombe_sur_la_valeur_par_defaut(monkeypatch):
+def test_read_secret_refuse_sans_secret(monkeypatch):
     monkeypatch.delenv("MA_VAR_INEXISTANTE", raising=False)
-    resultat = read_secret("MA_VAR_INEXISTANTE", "/chemin/qui/nexiste/pas", "defaut")
-    assert resultat == "defaut"
+    with pytest.raises(RuntimeError):
+        read_secret("MA_VAR_INEXISTANTE", "/chemin/qui/nexiste/pas")
+
+
+def test_read_secret_refuse_un_fichier_vide(tmp_path, monkeypatch):
+    monkeypatch.delenv("MA_VAR_INEXISTANTE", raising=False)
+    fichier = tmp_path / "secret-vide"
+    fichier.write_text("")
+    with pytest.raises(RuntimeError):
+        read_secret("MA_VAR_INEXISTANTE", str(fichier))
 
 
 def test_read_secret_fonctionne_sans_chemin_de_fichier(monkeypatch):
     monkeypatch.setenv("MA_VAR_TEST", "valeur-env")
-    resultat = read_secret("MA_VAR_TEST", None, "defaut")
+    resultat = read_secret("MA_VAR_TEST", None)
     assert resultat == "valeur-env"

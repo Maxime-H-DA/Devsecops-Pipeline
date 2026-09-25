@@ -3,20 +3,27 @@ import os
 import sqlite3
 import jwt
 import datetime
+import hmac
 
 app = Flask(__name__, static_folder="static")
 
 
-def read_secret(env_name, file_path, default=None):
+def read_secret(env_name, file_path):
     if file_path and os.path.exists(file_path):
         with open(file_path, "r", encoding="utf-8") as f:
-            return f.read().strip()
-    return os.environ.get(env_name, default)
+            value = f.read().strip()
+    else:
+        value = os.environ.get(env_name)
+    if not value:
+        raise RuntimeError(
+            f"Secret manquant : {env_name} (ni fichier {file_path}, ni variable d'environnement)"
+        )
+    return value
 
 
-TOKEN_SECRET = read_secret("API_SECRET_KEY", "/etc/secrets/API_SECRET_KEY", "changeme")
-ADMIN_USER = read_secret("ADMIN_USERNAME", "/etc/secrets/ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD = read_secret("ADMIN_PASSWORD", "/etc/secrets/ADMIN_PASSWORD", "password")
+TOKEN_SECRET = read_secret("API_SECRET_KEY", "/etc/secrets/API_SECRET_KEY")
+ADMIN_USER = read_secret("ADMIN_USERNAME", "/etc/secrets/ADMIN_USERNAME")
+ADMIN_PASSWORD = read_secret("ADMIN_PASSWORD", "/etc/secrets/ADMIN_PASSWORD")
 DATABASE = os.environ.get("API_DB_PATH", "database.db")
 
 ACTIONS_DISPONIBLES = ["JOKE", "COMPLIMENT", "DANCE", "PET", "DISCUSS", "OBSERVE", "INSULT", "THREATEN"]
@@ -152,13 +159,19 @@ def get_actions():
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
-    if not data:
+    if not isinstance(data, dict):
         return jsonify({"erreur": "Donnees manquantes"}), 400
 
     username = data.get("username")
     password = data.get("password")
 
-    if username != ADMIN_USER or password != ADMIN_PASSWORD:
+    if not isinstance(username, str) or not isinstance(password, str):
+        return jsonify({"erreur": "Identifiants incorrects"}), 401
+
+    utilisateur_ok = hmac.compare_digest(username.encode("utf-8"), ADMIN_USER.encode("utf-8"))
+    mot_de_passe_ok = hmac.compare_digest(password.encode("utf-8"), ADMIN_PASSWORD.encode("utf-8"))
+
+    if not (utilisateur_ok and mot_de_passe_ok):
         return jsonify({"erreur": "Identifiants incorrects"}), 401
 
     token = jwt.encode(
@@ -206,6 +219,8 @@ def ajouter_monstre():
         return jsonify({"erreur": "Non autorise"}), 401
 
     data = request.json
+    if not isinstance(data, dict):
+        return jsonify({"erreur": "Donnees manquantes"}), 400
 
     champs_requis = ["categorie", "nom", "hp", "atk", "def", "mercy", "act1", "act2"]
     for champ in champs_requis:
