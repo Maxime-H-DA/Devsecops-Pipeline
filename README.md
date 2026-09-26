@@ -93,30 +93,15 @@ L'API est alors accessible sur **http://localhost:5000**
 
 ### Kubernetes
 
-C'est la première version du déploiement, avant Vault. Les secrets de l'API passaient par un `Secret` Kubernetes créé depuis `.env`. En avançant, je me suis rendu compte qu'un Secret n'est qu'encodé en base64 : n'importe qui ayant accès au cluster peut le lire en une commande. C'est ce qui m'a amené à Vault (plus bas). Je garde cette version parce qu'elle reste la plus simple à lancer, et qu'elle montre d'où je suis parti.
-
 L'API tourne aussi sur un cluster Kubernetes local avec Kind. Le conteneur s'exécute en non-root avec un système de fichiers en lecture seule, des ressources CPU et mémoire limitées, et des probes de santé qui surveillent que l'API répond. Les secrets sont injectés sous forme de fichiers montés plutôt qu'en variables d'environnement. Les 2 réplicas partagent un volume persistant (PVC) pour la base SQLite : sans ça, chaque pod aurait sa propre base isolée et les données auraient été incohérentes selon le pod qui répondait.
 
-```
-kind create cluster --config k8s/kind-config.yaml
-docker build -t rpg-api:local -f rpg-api/Dockerfile .
-kind load docker-image rpg-api:local --name rpg-pipeline
-kubectl apply -f k8s/00-namespace.yaml
-kubectl apply -f k8s/05-pvc.yaml
-kubectl create secret generic rpg-api-secret --namespace rpg-pipeline --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f k8s/02-deployment.yaml
-kubectl apply -f k8s/03-service.yaml
-kubectl rollout restart deployment/rpg-api -n rpg-pipeline
-kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
-```
-
-L'API est alors accessible sur **http://localhost:5000**
-
-Note : avec les deux méthodes, les modifications faites en local ne sont pas synchronisées avec la version en ligne.
+Les manifests de `k8s/` correspondent à la version avec Vault et se déploient avec Terraform (plus bas).
 
 ### Helm
 
-Le même déploiement existe aussi packagé en chart Helm (`helm/rpg-api/`). Toutes les valeurs configurables (réplicas, ressources, UID, taille du volume...) sont centralisées dans `values.yaml` : changer l'environnement ne nécessite de modifier qu'un seul fichier, pas les manifests un par un. Le chart est scanné par Checkov en CI et produit le même résultat que les manifests bruts.
+C'est la première version du déploiement, avant Vault. Les secrets de l'API passent par un `Secret` Kubernetes créé depuis `.env`. En avançant, je me suis rendu compte qu'un Secret n'est qu'encodé en base64 : n'importe qui ayant accès au cluster peut le lire en une commande. C'est ce qui m'a amené à Vault (plus bas). Je garde cette version parce qu'elle reste la plus simple à lancer, et qu'elle montre d'où je suis parti.
+
+Elle est packagée en chart Helm (`helm/rpg-api/`). Toutes les valeurs configurables (réplicas, ressources, UID, taille du volume...) sont centralisées dans `values.yaml` : changer l'environnement ne nécessite de modifier qu'un seul fichier, pas les manifests un par un. Le chart est scanné par Checkov en CI.
 
 ```
 kind create cluster --config k8s/kind-config.yaml
@@ -130,9 +115,11 @@ kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
 
 L'API est alors accessible sur **http://localhost:5000**
 
+Note : avec Docker comme avec Helm, les modifications faites en local ne sont pas synchronisées avec la version en ligne.
+
 ### Terraform
 
-Le cluster et tout ce qu'il contient sont décrits dans `terraform/` : cluster Kind, Kyverno et ses 4 policies, Vault et le déploiement de l'API, avec des versions de charts figées. Deux `terraform apply` (le cluster d'abord, puis le reste) reconstruisent l'ensemble dans le bon ordre. Seule l'ouverture de Vault reste manuelle, pour que ses clés ne passent jamais par le state Terraform.
+Le cluster et tout ce qu'il contient sont décrits dans `terraform/` : cluster Kind, Kyverno et ses 4 policies, Vault, le déploiement de l'API et la supervision, avec des versions de charts figées. Deux `terraform apply` (le cluster d'abord, puis le reste) reconstruisent l'ensemble dans le bon ordre. Restent manuels, volontairement : l'ouverture de Vault et le dépôt des secrets, pour que rien de sensible ne passe par le state Terraform, et la construction de l'image, qui relève de la CI.
 
 ### Gestion des secrets avec Vault
 
@@ -172,6 +159,7 @@ kubectl exec -n vault vault-0 -- vault audit enable file file_path=/vault/audit/
 kubectl exec -n vault vault-0 -- vault token revoke -self
 
 kubectl rollout restart deployment/rpg-api -n rpg-pipeline
+kubectl rollout status deployment/rpg-api -n rpg-pipeline --timeout=180s
 $keys
 
 kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
