@@ -22,6 +22,12 @@ def secrets_de_test(monkeypatch):
     monkeypatch.setattr(app_module, "ADMIN_PASSWORD", "password")
     monkeypatch.setattr(app_module, "TOKEN_SECRET", "cle-de-test-uniquement-pour-pytest-0123456789")
 
+
+@pytest.fixture(autouse=True)
+def reinitialiser_limiteur():
+    app_module.limiter.reset()
+
+
 @pytest.fixture
 def client():
     db_fd, db_path = tempfile.mkstemp()
@@ -375,3 +381,30 @@ def test_echec_login_incremente_le_compteur(client):
 
 def test_pas_de_route_metrics_publique(client):
     assert client.get("/metrics").status_code == 404
+
+
+
+def test_login_bloque_apres_5_tentatives(client):
+    for _ in range(5):
+        client.post("/login", json={"username": "admin", "password": "mauvais"})
+    reponse = client.post("/login", json={"username": "admin", "password": "mauvais"})
+    assert reponse.status_code == 429
+
+
+def test_true_client_ip_ignore_par_defaut(client):
+    for i in range(5):
+        client.post("/login", json={"username": "admin", "password": "mauvais"},
+                    headers={"True-Client-IP": f"203.0.113.{i}"})
+    reponse = client.post("/login", json={"username": "admin", "password": "mauvais"},
+                          headers={"True-Client-IP": "203.0.113.99"})
+    assert reponse.status_code == 429
+
+
+def test_true_client_ip_utilise_si_active(client, monkeypatch):
+    monkeypatch.setattr(app_module, "FAIRE_CONFIANCE_TRUE_CLIENT_IP", True)
+    for _ in range(5):
+        client.post("/login", json={"username": "admin", "password": "mauvais"},
+                    headers={"True-Client-IP": "203.0.113.1"})
+    reponse = client.post("/login", json={"username": "admin", "password": "mauvais"},
+                          headers={"True-Client-IP": "203.0.113.2"})
+    assert reponse.status_code == 401

@@ -6,11 +6,25 @@ import datetime
 import hmac
 from prometheus_client import Counter, start_http_server
 from prometheus_flask_exporter import PrometheusMetrics
+from flask_limiter import Limiter
 
 app = Flask(__name__, static_folder="static")
-
 metrics = PrometheusMetrics(app, path=None)
 ECHECS_LOGIN = Counter("rpg_api_login_echecs", "Tentatives de connexion refusees sur /login")
+
+FAIRE_CONFIANCE_TRUE_CLIENT_IP = os.environ.get("TRUST_TRUE_CLIENT_IP") == "1"
+
+
+def ip_client():
+    if FAIRE_CONFIANCE_TRUE_CLIENT_IP:
+        ip = request.headers.get("True-Client-IP")
+        if ip:
+            return ip
+    return request.remote_addr
+
+
+limiter = Limiter(ip_client, app=app, storage_uri="memory://")
+
 
 def read_secret(env_name, file_path):
     if file_path and os.path.exists(file_path):
@@ -161,6 +175,7 @@ def get_actions():
 
 
 @app.route("/login", methods=["POST"])
+@limiter.limit("5 per minute;20 per hour;50 per day")
 def login():
     data = request.json
     if not isinstance(data, dict):
