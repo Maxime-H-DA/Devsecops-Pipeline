@@ -8,7 +8,7 @@ L'idée était de prendre un vrai projet et de lui appliquer des pratiques qu'on
 
 ## Avant même le push
 
-Des hooks pre-commit tournent en local à chaque commit : Gitleaks, Bandit, Semgrep et Checkov refont les mêmes vérifications qu'en CI mais avant que le code parte sur GitHub, en plus de quelques hooks d'hygiène (espaces en fin de ligne, fichiers volumineux, YAML valide).
+Des hooks pre-commit tournent en local à chaque commit : Gitleaks, Bandit, Semgrep et Checkov (sur les manifests Kubernetes et sur le code Terraform) refont les mêmes vérifications qu'en CI mais avant que le code parte sur GitHub, avec en plus le contrôle du formatage Terraform et quelques hooks d'hygiène (espaces en fin de ligne, fichiers volumineux, YAML valide).
 
 ## Ce qui se passe à chaque push et à chaque pull request
 
@@ -58,7 +58,7 @@ Les manifests Kubernetes, le chart Helm et le code Terraform sont analysés à c
 
 #### Test des policies Kyverno
 
-Les 4 règles Kyverno (`policies/` : non-root obligatoire, pas de conteneur privilégié, limites CPU/mémoire obligatoires, pas de tag `latest`) sont rejouées contre les manifests via la CLI officielle, sans avoir besoin d'un cluster actif. Si une future modification des manifests casse une règle, la PR échoue avant le merge : pas besoin d'avoir son cluster Kind lancé pour le découvrir.
+Les 4 règles Kyverno (`policies/` : non-root obligatoire, pas de conteneur privilégié, limites CPU/mémoire obligatoires, pas de tag `latest`) sont rejouées contre les manifests via la CLI officielle, sans avoir besoin d'un cluster actif. Si une future modification des manifests casse une règle, la PR échoue avant le merge : pas besoin d'avoir son cluster Kind lancé pour le découvrir. Sur le cluster, ces règles bloquent réellement (mode Enforce) dans le namespace de l'application, et restent en observation (Audit) sur les composants tiers (Vault, Prometheus, Kubernetes lui-même), que les rapports d'Audit ont montrés non conformes.
 
 #### Validation du code Terraform
 
@@ -66,7 +66,7 @@ Terraform décrit toute l'infrastructure, c'est donc aussi la partie la plus sen
 
 #### Tests unitaires (pytest)
 
-L'API est couverte par 42 tests unitaires : authentification JWT, validation des données, gestion des erreurs, headers de sécurité, lecture des secrets depuis fichiers montés ou variables d'environnement, refus de démarrer si un secret manque, comptage des connexions refusées, et absence de page de métriques sur l'API publique. Les tests tournent sur une base SQLite isolée pour ne pas polluer les données de production.
+L'API est couverte par 45 tests unitaires : authentification JWT, validation des données, gestion des erreurs, headers de sécurité, lecture des secrets depuis fichiers montés ou variables d'environnement, refus de démarrer si un secret manque, comptage des connexions refusées, limitation des tentatives de connexion (y compris une tentative de contournement par faux en-tête), et absence de page de métriques sur l'API publique.
 
 ## Résultats centralisés
 
@@ -78,7 +78,7 @@ Dependabot surveille en continu les actions GitHub, les dépendances Python de l
 
 ## L'API du bestiaire
 
-Une API Flask déployée sur [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com) qui expose les données des monstres du jeu. La lecture est libre, les modifications nécessitent une connexion avec identifiant et mot de passe. L'API refuse de démarrer si l'un de ses secrets est absent, plutôt que de retomber sur des valeurs par défaut, et compare les identifiants en temps constant pour ne rien laisser deviner par le temps de réponse.
+Une API Flask déployée sur [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com) qui expose les données des monstres du jeu. La lecture est libre, les modifications nécessitent une connexion avec identifiant et mot de passe. L'API refuse de démarrer si l'un de ses secrets est absent, plutôt que de retomber sur des valeurs par défaut, et compare les identifiants en temps constant pour ne rien laisser deviner par le temps de réponse. Les tentatives de connexion sont limitées par adresse IP, de plus en plus strictement (5 par minute, 20 par heure, 50 par jour), et une tentative de contournement par faux en-tête d'adresse a été testée en production.
 
 ### Docker
 
@@ -188,6 +188,8 @@ La supervision a servi dès le premier tableau de bord : un pod de l'API consomm
 - **Injection :** le webhook de l'injecteur Vault était en mode *fail-open*. Un pod créé avant que l'injecteur soit prêt passait sans sidecar, en silence. Passé en *fail-closed* (`failurePolicy: Fail`) : la création est refusée jusqu'à ce que l'injecteur réponde.
 - **Configuration :** la policy Vault n'avait pas été chargée. Le token root, déjà révoqué, a été régénéré à partir de 3 clés de déverrouillage (`vault operator generate-root`) sans reconstruire Vault.
 - **Application :** faute de secrets, l'API retombait sur des valeurs par défaut codées en dur (`admin` / `password`, clé JWT `changeme`), qu'aucun outil d'analyse statique n'avait signalées. Elle refuse désormais de démarrer si un secret manque.
+
+L'API publie aussi ses propres mesures (requêtes, temps de réponse, connexions refusées) sur un port séparé, que seule la supervision peut joindre : la NetworkPolicy qui l'isole a été vérifiée par un test de blocage depuis un autre namespace. Une alerte se déclenche au-delà de 10 connexions refusées en 5 minutes : c'est la détection, en complément du blocage côté API.
 
 
 ```

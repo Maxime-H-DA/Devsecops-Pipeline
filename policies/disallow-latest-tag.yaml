@@ -4,6 +4,10 @@ metadata:
   name: disallow-latest-tag
 spec:
   validationFailureAction: Audit
+  validationFailureActionOverrides:
+    - action: Enforce
+      namespaces:
+        - rpg-pipeline
   background: true
   rules:
     - name: require-image-tag
