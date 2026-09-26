@@ -4,6 +4,10 @@ metadata:
   name: require-resource-limits
 spec:
   validationFailureAction: Audit
+  validationFailureActionOverrides:
+    - action: Enforce
+      namespaces:
+        - rpg-pipeline
   background: true
   rules:
     - name: check-resource-limits
