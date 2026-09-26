@@ -99,3 +99,15 @@ resource "helm_release" "monitoring" {
   values = [file("${path.module}/../monitoring/values.yaml")]
   timeout = 600
 }
+
+
+resource "kubectl_manifest" "rpg_podmonitor" {
+  yaml_body  = file("${path.module}/../monitoring/rpg-api-podmonitor.yaml")
+  depends_on = [helm_release.monitoring, kubectl_manifest.rpg_namespace]
+}
+
+
+resource "kubectl_manifest" "rpg_alerts" {
+  yaml_body  = file("${path.module}/../monitoring/rpg-api-alerts.yaml")
+  depends_on = [helm_release.monitoring, kubectl_manifest.rpg_namespace]
+}

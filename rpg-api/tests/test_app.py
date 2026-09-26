@@ -1,9 +1,11 @@
+from prometheus_client import REGISTRY
 import pytest
 import jwt
 import datetime
 import sys
 import os
 import tempfile
+
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -12,13 +14,13 @@ from app import app as flask_app
 from app import read_secret
 from app import get_db
 
-SECRET = "changeme"  # nosemgrep: python.jwt.security.jwt-hardcode.jwt-python-hardcoded-secret
+SECRET = "cle-de-test-uniquement-pour-pytest-0123456789"  # nosemgrep: python.jwt.security.jwt-hardcode.jwt-python-hardcoded-secret
 
 @pytest.fixture(autouse=True)
 def secrets_de_test(monkeypatch):
     monkeypatch.setattr(app_module, "ADMIN_USER", "admin")
     monkeypatch.setattr(app_module, "ADMIN_PASSWORD", "password")
-    monkeypatch.setattr(app_module, "TOKEN_SECRET", "changeme")
+    monkeypatch.setattr(app_module, "TOKEN_SECRET", "cle-de-test-uniquement-pour-pytest-0123456789")
 
 @pytest.fixture
 def client():
@@ -362,3 +364,14 @@ def test_read_secret_fonctionne_sans_chemin_de_fichier(monkeypatch):
     monkeypatch.setenv("MA_VAR_TEST", "valeur-env")
     resultat = read_secret("MA_VAR_TEST", None)
     assert resultat == "valeur-env"
+
+
+def test_echec_login_incremente_le_compteur(client):
+    avant = REGISTRY.get_sample_value("rpg_api_login_echecs_total")
+    client.post("/login", json={"username": "admin", "password": "mauvais"})
+    apres = REGISTRY.get_sample_value("rpg_api_login_echecs_total")
+    assert apres == avant + 1
+
+
+def test_pas_de_route_metrics_publique(client):
+    assert client.get("/metrics").status_code == 404
