@@ -23,6 +23,10 @@ repos:
       - id: checkov
         files: \.ya?ml$
         args: ["--directory", "k8s/", "--framework", "kubernetes", "--compact", "--soft-fail"]
+      - id: checkov
+        name: checkov (terraform)
+        files: \.tf$
+        args: ["--directory", "terraform/", "--framework", "terraform", "--compact", "--soft-fail"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -32,3 +36,11 @@ repos:
       - id: check-yaml
         exclude: ^helm/.*/templates/
       - id: check-added-large-files
+
+  - repo: local
+    hooks:
+      - id: terraform-fmt
+        name: terraform fmt
+        entry: terraform fmt -check -recursive terraform
+        language: system
+        files: \.tf$
