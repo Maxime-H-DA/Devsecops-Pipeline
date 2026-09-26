@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: rpg-api
+  namespace: rpg-pipeline
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: rpg-api
+  podMetricsEndpoints:
+  - port: metrics
+    interval: 30s

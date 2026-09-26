@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: rpg-api-alerts
+  namespace: rpg-pipeline
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: rpg-api.rules
+      rules:
+        - alert: ForceBruteLogin
+          expr: sum(increase(rpg_api_login_echecs_total[5m])) > 10
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Rafale d'echecs de connexion sur l'API"
+            description: "Plus de 10 connexions refusees sur /login en 5 minutes : possible attaque par force brute."

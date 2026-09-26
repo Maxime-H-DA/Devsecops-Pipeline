@@ -15,5 +15,12 @@ spec:
       ports:
         - protocol: TCP
           port: 5000
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - protocol: TCP
+          port: 9100
   egress:
     - {}

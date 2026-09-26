@@ -4,9 +4,13 @@ import sqlite3
 import jwt
 import datetime
 import hmac
+from prometheus_client import Counter, start_http_server
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__, static_folder="static")
 
+metrics = PrometheusMetrics(app, path=None)
+ECHECS_LOGIN = Counter("rpg_api_login_echecs", "Tentatives de connexion refusees sur /login")
 
 def read_secret(env_name, file_path):
     if file_path and os.path.exists(file_path):
@@ -166,12 +170,14 @@ def login():
     password = data.get("password")
 
     if not isinstance(username, str) or not isinstance(password, str):
+        ECHECS_LOGIN.inc()
         return jsonify({"erreur": "Identifiants incorrects"}), 401
 
     utilisateur_ok = hmac.compare_digest(username.encode("utf-8"), ADMIN_USER.encode("utf-8"))
     mot_de_passe_ok = hmac.compare_digest(password.encode("utf-8"), ADMIN_PASSWORD.encode("utf-8"))
 
     if not (utilisateur_ok and mot_de_passe_ok):
+        ECHECS_LOGIN.inc()
         return jsonify({"erreur": "Identifiants incorrects"}), 401
 
     token = jwt.encode(
@@ -301,4 +307,5 @@ def supprimer_monstre(nom):
 
 if __name__ == "__main__":
     init_db()
+    start_http_server(9100)
     app.run(host="0.0.0.0", port=5000)  # nosec B104 - necessaire pour accepter les connexions depuis Docker/Kubernetes  # nosemgrep: python.flask.security.audit.app-run-param-config.avoid_app_run_with_bad_host

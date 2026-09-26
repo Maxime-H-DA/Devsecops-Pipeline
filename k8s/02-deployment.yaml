@@ -52,6 +52,8 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
+            - containerPort: 9100
+              name: metrics
           env:
             - name: API_DB_PATH
               value: /app/data/database.db
