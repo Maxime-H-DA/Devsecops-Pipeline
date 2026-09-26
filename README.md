@@ -61,7 +61,7 @@ Les 4 règles Kyverno (`policies/` : non-root obligatoire, pas de conteneur priv
 
 #### Tests unitaires (pytest)
 
-L'API est couverte par 40 tests unitaires : authentification JWT, validation des données, gestion des erreurs, headers de sécurité, lecture des secrets depuis fichiers montés ou variables d'environnement, et refus de démarrer si un secret manque. Les tests tournent sur une base SQLite isolée pour ne pas polluer les données de production.
+L'API est couverte par 42 tests unitaires : authentification JWT, validation des données, gestion des erreurs, headers de sécurité, lecture des secrets depuis fichiers montés ou variables d'environnement, refus de démarrer si un secret manque, comptage des connexions refusées, et absence de page de métriques sur l'API publique. Les tests tournent sur une base SQLite isolée pour ne pas polluer les données de production.
 
 ## Résultats centralisés
 
@@ -184,13 +184,15 @@ La supervision a servi dès le premier tableau de bord : un pod de l'API consomm
 - **Configuration :** la policy Vault n'avait pas été chargée. Le token root, déjà révoqué, a été régénéré à partir de 3 clés de déverrouillage (`vault operator generate-root`) sans reconstruire Vault.
 - **Application :** faute de secrets, l'API retombait sur des valeurs par défaut codées en dur (`admin` / `password`, clé JWT `changeme`), qu'aucun outil d'analyse statique n'avait signalées. Elle refuse désormais de démarrer si un secret manque.
 
+
 ```
 $pw = kubectl get secret monitoring-grafana -n monitoring -o jsonpath="{.data.admin-password}"
 [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($pw))
 kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
+kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9090:9090
 ```
 
-Grafana est alors accessible sur **http://localhost:3000** (utilisateur `admin`).
+Grafana est alors accessible sur **http://localhost:3000** (utilisateur `admin`), et Prometheus sur **http://localhost:9090** (alertes dans l'onglet *Alerts*). Chaque `port-forward` occupe son terminal.
 
 ## Synchronisation avec le jeu
 
