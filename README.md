@@ -21,11 +21,12 @@ push (main) / pull request -> main
  |-- tests-api : pytest
  |-- dast-api : OWASP ZAP sur l'API déjà en ligne (Render)
  |-- supply-chain-api : SBOM (Syft) + signature de l'image (Cosign)
- |-- iac-scan-checkov : scan des manifests Kubernetes et du chart Helm
- `-- kyverno-policy-test : teste les policies Kyverno contre les manifests
+ |-- iac-scan-checkov : scan des manifests Kubernetes, du chart Helm et du code Terraform
+ |-- kyverno-policy-test : teste les policies Kyverno contre les manifests
+ `-- terraform-check : formatage et validation du code Terraform
 ```
 
-Les 9 jobs tournent en parallèle, sans dépendance entre eux, à chaque push **et** à chaque pull request vers `main` : les scans passent avant le merge, pas après. Render déploie automatiquement de son côté ; `dast-api` se contente de réveiller puis scanner l'API déjà en ligne.
+Les 10 jobs tournent en parallèle, sans dépendance entre eux, à chaque push **et** à chaque pull request vers `main` : les scans passent avant le merge, pas après. Render déploie automatiquement de son côté ; `dast-api` se contente de réveiller puis scanner l'API déjà en ligne.
 
 #### Analyse du code avec Cppcheck
 
@@ -53,11 +54,15 @@ Chaque image poussée sur GitHub Container Registry génère un inventaire de se
 
 #### Scan d'infrastructure avec Checkov
 
-Les manifests Kubernetes et le chart Helm sont analysés à chaque push. Le premier scan a remonté 9 mauvaises configurations : UID trop bas (risque de collision avec un utilisateur hôte), secrets injectés en variables d'environnement au lieu de fichiers montés, système de fichiers du conteneur accessible en écriture, absence de politique réseau. 7 ont été corrigées dans les manifests et reproduites à l'identique dans le chart Helm ; les 2 restantes sont documentées et acceptées comme contraintes propres à Kind (pas de digest d'image disponible pour une image chargée localement, `imagePullPolicy` forcé à `IfNotPresent`).
+Les manifests Kubernetes, le chart Helm et le code Terraform sont analysés à chaque push. Le premier scan a remonté 9 mauvaises configurations : UID trop bas (risque de collision avec un utilisateur hôte), secrets injectés en variables d'environnement au lieu de fichiers montés, système de fichiers du conteneur accessible en écriture, absence de politique réseau. 7 ont été corrigées dans les manifests et reproduites à l'identique dans le chart Helm ; les 2 restantes sont documentées et acceptées comme contraintes propres à Kind (pas de digest d'image disponible pour une image chargée localement, `imagePullPolicy` forcé à `IfNotPresent`).
 
 #### Test des policies Kyverno
 
 Les 4 règles Kyverno (`policies/` : non-root obligatoire, pas de conteneur privilégié, limites CPU/mémoire obligatoires, pas de tag `latest`) sont rejouées contre les manifests via la CLI officielle, sans avoir besoin d'un cluster actif. Si une future modification des manifests casse une règle, la PR échoue avant le merge : pas besoin d'avoir son cluster Kind lancé pour le découvrir.
+
+#### Validation du code Terraform
+
+Terraform décrit toute l'infrastructure, c'est donc aussi la partie la plus sensible du repo. Chaque PR vérifie qu'il est correctement formaté (`terraform fmt -check`) et cohérent (`terraform validate`), avec la même version de Terraform qu'en local et les providers figés par le lock file. Rien n'est déployé : la CI n'a ni cluster ni state, elle contrôle uniquement le code.
 
 #### Tests unitaires (pytest)
 
@@ -69,7 +74,7 @@ Gitleaks, Bandit, Semgrep et Trivy publient tous leurs résultats dans l'onglet 
 
 ## Dépendances tenues à jour automatiquement
 
-Dependabot surveille en continu les actions GitHub, les dépendances Python de l'API et les images Docker de base. Il ouvre une pull request à chaque nouvelle version disponible (avec un délai de 7 jours après la sortie, pour éviter une version tout juste publiée et pas encore éprouvée), qui passe par les mêmes 9 jobs avant de pouvoir être mergée.
+Dependabot surveille en continu les actions GitHub, les dépendances Python de l'API et les images Docker de base. Il ouvre une pull request à chaque nouvelle version disponible (avec un délai de 7 jours après la sortie, pour éviter une version tout juste publiée et pas encore éprouvée), qui passe par les mêmes 10 jobs avant de pouvoir être mergée.
 
 ## L'API du bestiaire
 

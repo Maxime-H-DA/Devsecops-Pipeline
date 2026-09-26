@@ -271,6 +271,13 @@ jobs:
           framework: helm
           output_format: cli
 
+      - name: Scan Checkov du code Terraform
+        uses: bridgecrewio/checkov-action@v12.3108.0
+        with:
+          directory: terraform/
+          framework: terraform
+          output_format: cli
+
   kyverno-policy-test:
     runs-on: ubuntu-latest
     steps:
@@ -284,3 +291,26 @@ jobs:
 
       - name: Test des policies contre les manifests Kubernetes
         run: kyverno apply policies/ --resource k8s/
+
+  terraform-check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - name: Téléchargement du code source
+        uses: actions/checkout@v7
+
+      - name: Installation de Terraform
+        uses: hashicorp/setup-terraform@v4.0.1
+        with:
+          terraform_version: '1.16.2'
+
+      - name: Vérification du formatage
+        run: terraform fmt -check -recursive
+
+      - name: Initialisation sans backend
+        run: terraform init -backend=false
+
+      - name: Validation de la configuration
+        run: terraform validate
