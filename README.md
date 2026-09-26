@@ -244,5 +244,5 @@ py play.py
 - **Observabilité** : Prometheus, Grafana
 
 ## Projet source
-
-Le code du jeu RPG : [projet-RPG-S6](https://github.com/Maxime-H-DA/projet-RPG-S6)
+S6
+Le code du jeu RPG : [Alterdune](https://github.com/Maxime-H-DA/Alterdune)
