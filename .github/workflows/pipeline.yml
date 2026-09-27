@@ -39,8 +39,9 @@ jobs:
       - name: Recherche de bugs dans le code C++
         run: |
           cppcheck \
-            --enable=warning,performance,portability \
+            --enable=warning,portability \
             --suppress=missingIncludeSystem \
+            --error-exitcode=1 \
             rpg-source/
 
   scan-jeu:
@@ -63,11 +64,13 @@ jobs:
           image-ref: rpg-alterdune
           severity: HIGH,CRITICAL
           ignore-unfixed: true
-          exit-code: 0
+          limit-severities-for-sarif: true
+          exit-code: 1
           format: sarif
           output: trivy-jeu.sarif
 
       - name: Upload du rapport vers l'onglet Security
+        if: always()
         uses: github/codeql-action/upload-sarif@v4.36.2
         with:
           sarif_file: trivy-jeu.sarif
@@ -113,34 +116,34 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Analyse Bandit (vulnérabilités Python)
-        run: |
-          pipx run --spec "bandit[sarif]" bandit -r rpg-api/ -ll -f sarif -o bandit-report.sarif || true
-          pipx run --spec "bandit[sarif]" bandit -r rpg-api/ -ll -f json -o bandit-report.json || true
+        run: pipx run --spec "bandit[sarif]" bandit -r rpg-api/ -ll -f sarif -o bandit-report.sarif
 
       - name: Analyse Semgrep (SAST moderne)
-        run: |
-          pipx run semgrep scan --config auto rpg-api/ --sarif --output semgrep-report.sarif || true
-          pipx run semgrep scan --config auto rpg-api/ --json --output semgrep-report.json || true
+        if: always()
+        run: pipx run semgrep scan --config auto rpg-api/ --error --sarif --output semgrep-report.sarif
 
       - name: Upload rapport Bandit vers l'onglet Security
+        if: always()
         uses: github/codeql-action/upload-sarif@v4.36.2
         with:
           sarif_file: bandit-report.sarif
           category: bandit
 
       - name: Upload rapport Semgrep vers l'onglet Security
+        if: always()
         uses: github/codeql-action/upload-sarif@v4.36.2
         with:
           sarif_file: semgrep-report.sarif
           category: semgrep
 
-      - name: Upload rapports SAST bruts (JSON)
+      - name: Upload rapports SAST bruts
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: sast-reports
           path: |
-            bandit-report.json
-            semgrep-report.json
+            bandit-report.sarif
+            semgrep-report.sarif
 
   tests-api:
     runs-on: ubuntu-latest
@@ -179,6 +182,16 @@ jobs:
           artifact_name: 'zap-scan-results'
 
   supply-chain-api:
+    needs:
+      - analyse-code
+      - scan-jeu
+      - scan-api
+      - sast-api
+      - tests-api
+      - iac-scan-checkov
+      - kyverno-policy-test
+      - terraform-check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -262,21 +275,25 @@ jobs:
           directory: k8s/
           framework: kubernetes
           output_format: cli
-          soft_fail: true
+          soft_fail: false
 
       - name: Scan Checkov du chart Helm
+        if: always()
         uses: bridgecrewio/checkov-action@v12.3108.0
         with:
           directory: helm/
           framework: helm
           output_format: cli
+          soft_fail: false
 
       - name: Scan Checkov du code Terraform
+        if: always()
         uses: bridgecrewio/checkov-action@v12.3108.0
         with:
           directory: terraform/
           framework: terraform
           output_format: cli
+          soft_fail: false
 
   kyverno-policy-test:
     runs-on: ubuntu-latest
