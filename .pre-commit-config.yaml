@@ -22,11 +22,11 @@ repos:
     hooks:
       - id: checkov
         files: \.ya?ml$
-        args: ["--directory", "k8s/", "--framework", "kubernetes", "--compact", "--soft-fail"]
+        args: ["--directory", "k8s/", "--framework", "kubernetes", "--compact"]
       - id: checkov
         name: checkov (terraform)
         files: \.tf$
-        args: ["--directory", "terraform/", "--framework", "terraform", "--compact", "--soft-fail"]
+        args: ["--directory", "terraform/", "--framework", "terraform", "--compact"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
