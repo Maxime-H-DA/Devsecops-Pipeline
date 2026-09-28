@@ -96,7 +96,8 @@ jobs:
           image-ref: rpg-api
           severity: HIGH,CRITICAL
           ignore-unfixed: true
-          exit-code: 0
+          limit-severities-for-sarif: true
+          exit-code: 1
           format: sarif
           output: trivy-api.sarif
 
