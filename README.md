@@ -2,50 +2,50 @@
 
 # DevSecOps Pipeline
 
-Plateforme DevSecOps complète, du commit jusqu'à la production : pipeline CI/CD sécurisé, déploiement Kubernetes durci, infrastructure décrite en Terraform, secrets dans HashiCorp Vault et supervision Prometheus/Grafana.
+End-to-end DevSecOps platform, from commit to production: secure CI/CD pipeline, hardened Kubernetes deployment, infrastructure defined in Terraform, secrets in HashiCorp Vault, and monitoring with Prometheus/Grafana.
 
-Le tout est appliqué à une API Flask en production sur [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com), qui expose les monstres d'un jeu RPG en C++. L'objectif n'était pas l'application elle-même, mais de reproduire les pratiques d'une équipe DevOps en entreprise.
+All of it is applied to a Flask API running in production at [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com), which serves the monsters of a C++ RPG game. The goal wasn't the application itself, but to reproduce the practices of an enterprise DevOps team.
 
-**En bref**
-- 10 jobs CI à chaque push et pull request, dont 8 bloquants : le merge est impossible si l'un échoue
-- 45 tests unitaires, dont des tests d'attaque
-- 189 alertes Trivy triées, failles de configuration HTTP (ZAP) et Kubernetes (Checkov) corrigées
-- 16 ressources Terraform pour reconstruire tout l'environnement
-- 4 policies Kyverno en mode bloquant
-- Secrets chiffrés dans Vault, jamais stockés en clair dans le cluster
+**At a glance**
+- 10 CI jobs on every push and pull request, 8 of them blocking: merging is impossible if any of them fails
+- 45 unit tests, including attack tests
+- 189 Trivy alerts triaged, HTTP (ZAP) and Kubernetes (Checkov) misconfigurations fixed
+- 16 Terraform resources to rebuild the entire environment
+- 4 Kyverno policies in enforce mode
+- Secrets encrypted in Vault, never stored in plaintext in the cluster
 
-## Pipeline CI/CD
+## CI/CD Pipeline
 
 ```
 push / pull request -> main
  |
- |-- en parallèle, bloquants :
- |    |-- analyse-code : Gitleaks + Cppcheck (code C++)
- |    |-- scan-jeu : Build Docker (jeu) + Trivy
- |    |-- scan-api : Build Docker (API) + Trivy
- |    |-- sast-api : Bandit + Semgrep
- |    |-- tests-api : pytest
- |    |-- iac-scan-checkov : manifests Kubernetes, chart Helm et Terraform
- |    |-- kyverno-policy-test : policies Kyverno rejouées contre les manifests
- |    `-- terraform-check : formatage et validation du code Terraform
+ |-- in parallel, blocking:
+ |    |-- analyse-code: Gitleaks + Cppcheck (C++ code)
+ |    |-- scan-jeu: Docker build (game) + Trivy
+ |    |-- scan-api: Docker build (API) + Trivy
+ |    |-- sast-api: Bandit + Semgrep
+ |    |-- tests-api: pytest
+ |    |-- iac-scan-checkov: Kubernetes manifests, Helm chart and Terraform
+ |    |-- kyverno-policy-test: Kyverno policies replayed against the manifests
+ |    `-- terraform-check: Terraform code formatting and validation
  |
- |-- en parallèle, non bloquant :
- |    `-- dast-api : OWASP ZAP sur l'API en ligne (Render)
+ |-- in parallel, non-blocking:
+ |    `-- dast-api: OWASP ZAP against the live API (Render)
  |
- `-- après les 8 jobs bloquants, sur main uniquement :
-      `-- supply-chain-api : publication de l'image, SBOM (Syft) + signature (Cosign)
+ `-- after the 8 blocking jobs, on main only:
+      `-- supply-chain-api: image publishing, SBOM (Syft) + signing (Cosign)
 ```
 
-Les scans passent avant le merge, pas après, et seule une image validée par tous les contrôles est publiée et signée. Des hooks pre-commit refont l'essentiel en local avant même le push, les résultats remontent dans l'onglet **Security > Code scanning**, et Dependabot garde les dépendances à jour en passant par les mêmes contrôles.
+Scans run before the merge, not after, and only an image that has passed every check is published and signed. Pre-commit hooks rerun most of these checks locally before the push even happens, results show up in the **Security > Code scanning** tab, and Dependabot keeps dependencies up to date by going through the same checks.
 
-## Déploiement
+## Deployment
 
 ### Docker
 
-La façon la plus rapide de lancer l'API en local.
+The quickest way to run the API locally.
 
 <details>
-<summary>Commandes</summary>
+<summary>Commands</summary>
 
 ```
 docker build -t rpg-api -f rpg-api/Dockerfile .
@@ -54,14 +54,14 @@ docker run -d -p 5000:5000 --env-file .env -v rpg-data:/app/data rpg-api
 
 </details>
 
-L'API est accessible sur **http://localhost:5000**
+The API is available at **http://localhost:5000**
 
 ### Helm
 
-Première version du déploiement Kubernetes (Kind), avant Vault : conteneur non-root, système de fichiers en lecture seule, ressources limitées, probes de santé et NetworkPolicy. Les secrets passent encore par un `Secret` Kubernetes.
+First version of the Kubernetes deployment (Kind), before Vault: non-root container, read-only filesystem, resource limits, health probes and NetworkPolicy. Secrets still go through a Kubernetes `Secret`.
 
 <details>
-<summary>Commandes</summary>
+<summary>Commands</summary>
 
 ```
 kind create cluster --config k8s/kind-config.yaml
@@ -75,14 +75,14 @@ kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
 
 </details>
 
-L'API est accessible sur **http://localhost:5000**
+The API is available at **http://localhost:5000**
 
-### Terraform et Vault
+### Terraform and Vault
 
-Version complète : Terraform reconstruit le cluster, Kyverno, Vault, l'application et la supervision. Les secrets sont chiffrés dans Vault et injectés au démarrage du pod par un sidecar ; chaque pod s'authentifie avec son propre ServiceAccount, en lecture seule et à durée limitée.
+Full version: Terraform rebuilds the cluster, Kyverno, Vault, the application and the monitoring stack. Secrets are encrypted in Vault and injected at pod startup by a sidecar; each pod authenticates with its own ServiceAccount, with read-only, time-limited access.
 
 <details>
-<summary>Commandes</summary>
+<summary>Commands</summary>
 
 ```
 cd terraform
@@ -120,7 +120,7 @@ kubectl exec -n vault vault-0 -- vault token revoke -self
 kubectl rollout restart deployment/rpg-api -n rpg-pipeline
 kubectl rollout status deployment/rpg-api -n rpg-pipeline --timeout=180s
 
-# Clés de déverrouillage : à conserver hors du repo, nécessaires pour rouvrir Vault
+# Unseal keys: keep them outside the repo, required to unseal Vault again
 $keys
 
 kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
@@ -128,14 +128,14 @@ kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
 
 </details>
 
-L'API est accessible sur **http://localhost:5000**
+The API is available at **http://localhost:5000**
 
-## Supervision
+## Monitoring
 
-Prometheus relève l'état du cluster et les mesures de l'API, Grafana les affiche en tableaux de bord. Une alerte se déclenche au-delà de 10 connexions refusées en 5 minutes.
+Prometheus collects cluster state and API metrics, and Grafana displays them in dashboards. An alert fires when there are more than 10 rejected logins within 5 minutes.
 
 <details>
-<summary>Commandes</summary>
+<summary>Commands</summary>
 
 ```
 $pw = kubectl get secret monitoring-grafana -n monitoring -o jsonpath="{.data.admin-password}"
@@ -146,23 +146,23 @@ kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 909
 
 </details>
 
-Grafana est accessible sur **http://localhost:3000** (utilisateur `admin`), Prometheus sur **http://localhost:9090**. Chaque `port-forward` occupe son terminal.
+Grafana is available at **http://localhost:3000** (user `admin`), Prometheus at **http://localhost:9090**. Each `port-forward` takes up its own terminal.
 
-## Synchronisation avec le jeu
+## Game Sync
 
 ```
 py play.py
 ```
 
-Le script récupère les monstres depuis l'API en ligne et met à jour `monsters.csv` avant de lancer le jeu.
+The script fetches the monsters from the live API and updates `monsters.csv` before launching the game.
 
-## Outils utilisés
+## Tools Used
 
-- **CI/CD & infrastructure** : GitHub Actions, Docker, Kubernetes (Kind), Helm, Terraform, Alpine Linux, Dependabot
-- **Sécurité** : Gitleaks, Trivy, Bandit, Semgrep, OWASP ZAP, Cppcheck, Checkov, Kyverno, Syft, Cosign, HashiCorp Vault
-- **Backend & tests** : Flask, SQLite, JWT, pytest
-- **Observabilité** : Prometheus, Grafana
+- **CI/CD & infrastructure**: GitHub Actions, Docker, Kubernetes (Kind), Helm, Terraform, Alpine Linux, Dependabot
+- **Security**: Gitleaks, Trivy, Bandit, Semgrep, OWASP ZAP, Cppcheck, Checkov, Kyverno, Syft, Cosign, HashiCorp Vault
+- **Backend & testing**: Flask, SQLite, JWT, pytest
+- **Observability**: Prometheus, Grafana
 
-## Projet source
+## Source Project
 
-Le code du jeu RPG (projet S6) : [Alterdune](https://github.com/Maxime-H-DA/Alterdune)
+The RPG game code (S6 project): [Alterdune](https://github.com/Maxime-H-DA/Alterdune)
