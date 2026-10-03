@@ -1,5 +1,7 @@
 FROM python:3.14-slim
 
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+
 ENV PYTHONUTF8=1
 
 WORKDIR /app
