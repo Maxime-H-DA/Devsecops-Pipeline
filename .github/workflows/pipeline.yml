@@ -102,6 +102,7 @@ jobs:
           output: trivy-api.sarif
 
       - name: Upload du rapport vers l'onglet Security
+        if: always()
         uses: github/codeql-action/upload-sarif@v4.36.2
         with:
           sarif_file: trivy-api.sarif
