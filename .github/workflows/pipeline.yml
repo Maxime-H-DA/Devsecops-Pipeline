@@ -183,6 +183,19 @@ jobs:
           fail_action: false
           artifact_name: 'zap-scan-results'
 
+  dast-api-local:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: read
+    steps:
+      - name: Téléchargement du code source
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: Construction de l'image de l'API
+        run: docker build -t rpg-api:pr -f rpg-api/Dockerfile .
+
   supply-chain-api:
     needs:
       - analyse-code
