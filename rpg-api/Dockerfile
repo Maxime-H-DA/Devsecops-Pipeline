@@ -8,7 +8,7 @@ WORKDIR /app
 COPY rpg-api/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt && pip uninstall -y pip
 
-COPY rpg-api/app.py .
+COPY rpg-api/app.py rpg-api/gunicorn.conf.py ./
 COPY rpg-api/templates/ templates/
 COPY rpg-api/static/ static/
 COPY rpg-source/monsters.csv .
@@ -18,4 +18,4 @@ USER appuser
 
 EXPOSE 5000
 
-CMD ["python", "app.py"]
+CMD ["gunicorn", "-c", "gunicorn.conf.py", "app:app"]
