@@ -144,7 +144,7 @@ def ajouter_headers_securite(response):
         "default-src 'self'; "
         "script-src 'self'; "
         "style-src 'self'; "
-        "img-src 'self'; "     # response.headers["X-Frame-Options"] = "DENY"
+        "img-src 'self'; "
         "font-src 'self'; "
         "connect-src 'self'; "
         "form-action 'self'; "
