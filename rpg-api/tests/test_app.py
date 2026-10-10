@@ -326,9 +326,22 @@ def test_headers_securite_valeurs(client):
     assert reponse.headers["X-Frame-Options"] == "DENY"
 
 
-def test_header_cache_control_api(client):
-    reponse = client.get("/monstres")
+@pytest.mark.parametrize("route", ["/", "/actions", "/monstres", "/monstres/inconnu"])
+def test_no_store_sur_les_routes_non_statiques(client, route):
+    reponse = client.get(route)
     assert "no-store" in reponse.headers.get("Cache-Control", "")
+
+
+def test_no_store_sur_le_login(client):
+    reponse = client.post("/login", json={"username": "admin", "password": "password"})
+    assert reponse.status_code == 200
+    assert "no-store" in reponse.headers.get("Cache-Control", "")
+
+
+def test_fichiers_statiques_en_cache(client):
+    reponse = client.get("/static/style.css")
+    assert reponse.status_code == 200
+    assert reponse.headers["Cache-Control"] == "public, max-age=3600"
 
 
 def test_read_secret_lit_la_variable_env_si_aucun_fichier(monkeypatch):
