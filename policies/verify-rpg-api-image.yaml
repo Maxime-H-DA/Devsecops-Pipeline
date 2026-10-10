@@ -1,0 +1,47 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-rpg-api-image
+spec:
+  validationFailureAction: Enforce
+  webhookTimeoutSeconds: 30
+  background: false
+  rules:
+    - name: registre-autorise
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - rpg-pipeline
+      validate:
+        message: "Dans rpg-pipeline, seules les images ghcr.io/maxime-h-da/rpg-api et hashicorp/vault sont autorisées."
+        pattern:
+          spec:
+            containers:
+              - image: "ghcr.io/maxime-h-da/rpg-api* | hashicorp/vault*"
+            =(initContainers):
+              - image: "ghcr.io/maxime-h-da/rpg-api* | hashicorp/vault*"
+
+    - name: signature-du-pipeline
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - rpg-pipeline
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/maxime-h-da/rpg-api*"
+          mutateDigest: true
+          verifyDigest: true
+          required: true
+          attestors:
+            - entries:
+                - keyless:
+                    issuer: "https://token.actions.githubusercontent.com"
+                    subject: "https://github.com/Maxime-H-DA/Devsecops-Pipeline/.github/workflows/pipeline.yml@refs/heads/main"
+                    rekor:
+                      url: https://rekor.sigstore.dev

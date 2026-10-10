@@ -75,8 +75,10 @@ resource "kubectl_manifest" "rpg_deployment" {
     kubectl_manifest.rpg_pvc,
     kubectl_manifest.rpg_serviceaccount,
     helm_release.vault,
+    kubectl_manifest.kyverno_policies,
   ]
 }
+
 
 resource "kubectl_manifest" "rpg_service" {
   yaml_body  = file("${path.module}/../k8s/03-service.yaml")

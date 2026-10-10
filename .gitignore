@@ -22,3 +22,5 @@ terraform/.terraform/
 *.tfstate.*
 crash.log
 terraform/*-config
+
+.vault-keys/

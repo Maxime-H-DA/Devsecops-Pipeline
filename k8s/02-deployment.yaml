@@ -6,8 +6,7 @@ metadata:
   labels:
     app: rpg-api
   annotations:
-    checkov.io/skip1: "CKV_K8S_43=Dev local Kind : image chargee via kind load docker-image, pas de digest disponible. En prod (ghcr.io) l'image est epinglee par digest et signee via Cosign."
-    checkov.io/skip2: "CKV_K8S_15=IfNotPresent requis pour kind load docker-image, l'image locale n'existe dans aucun registre a pull."
+    checkov.io/skip1: "CKV_K8S_43=Le digest est résolu, vérifié (signature Cosign) et figé à l'admission par la policy Kyverno verify-rpg-api-image (mutateDigest)."
     checkov.io/skip3: "CKV_K8S_38=Token requis par le sidecar Vault Agent pour l'authentification Kubernetes (role rpg-api). ServiceAccount dedie a l'API, sans droits sur l'API Kubernetes."
 spec:
   replicas: 2
@@ -49,8 +48,8 @@ spec:
           type: RuntimeDefault
       containers:
         - name: rpg-api
-          image: rpg-api:local
-          imagePullPolicy: IfNotPresent
+          image: ghcr.io/maxime-h-da/rpg-api:main
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
             - containerPort: 9100
