@@ -7,7 +7,7 @@ policies:
   - ../disallow-privileged.yaml
   - ../require-non-root-user.yaml
   - ../require-resource-limits.yaml
-  - ../restrict-image-registry.yaml
+  - ../verify-rpg-api-image.yaml
 resources:
   - resources.yaml
 results:
@@ -69,19 +69,19 @@ results:
       - pod-sans-tag
     result: fail
 
-  - policy: restrict-image-registry
+  - policy: verify-rpg-api-image
     rule: registre-autorise
     kind: Pod
     resources:
       - pod-conforme
     result: pass
-  - policy: restrict-image-registry
+  - policy: verify-rpg-api-image
     rule: registre-autorise
     kind: Pod
     resources:
       - pod-image-locale
     result: fail
-  - policy: restrict-image-registry
+  - policy: verify-rpg-api-image
     rule: registre-autorise
     kind: Pod
     resources:
