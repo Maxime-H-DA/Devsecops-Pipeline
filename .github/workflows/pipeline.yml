@@ -186,7 +186,7 @@ jobs:
   dast-api-local:
     runs-on: ubuntu-latest
     permissions:
-      issues: read
+      contents: read
     steps:
       - name: Téléchargement du code source
         uses: actions/checkout@v7
@@ -200,7 +200,7 @@ jobs:
         run: |
           {
             echo "API_SECRET_KEY=$(openssl rand -hex 32)"
-            echo "ADMIN_USERNAME=zap-$(openssl rand -hex 14)"
+            echo "ADMIN_USERNAME=zap-$(openssl rand -hex 4)"
             echo "ADMIN_PASSWORD=$(openssl rand -hex 24)"
           } > ci.env
 
@@ -220,13 +220,23 @@ jobs:
           docker logs rpg-api-pr
           exit 1
 
+      - name: Smoke test du conteneur
+        run: |
+          curl -sf http://localhost:5000/monstres | jq -e 'length > 0'
+          docker exec rpg-api-pr python -c "import urllib.request; urllib.request.urlopen('http://localhost:9100')"
+
       - name: OWASP ZAP sur l'API de la PR
         uses: zaproxy/action-baseline@v0.15.0
         with:
           target: 'http://localhost:5000'
-          fail_action: false
+          rules_file_name: '.zap/rules.tsv'
+          fail_action: true
           allow_issue_writing: false
           artifact_name: 'zap-scan-local'
+
+      - name: Logs de l'API
+        if: always()
+        run: docker logs rpg-api-pr || true
 
   supply-chain-api:
     needs:
