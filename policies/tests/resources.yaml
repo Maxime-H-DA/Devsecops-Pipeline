@@ -1,0 +1,132 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-conforme
+  namespace: rpg-pipeline
+spec:
+  containers:
+    - name: app
+      image: hashicorp/vault:1.20.4
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-root
+  namespace: rpg-pipeline
+spec:
+  containers:
+    - name: app
+      image: hashicorp/vault:1.20.4
+      securityContext:
+        runAsNonRoot: false
+        allowPrivilegeEscalation: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-privilegie
+  namespace: rpg-pipeline
+spec:
+  containers:
+    - name: app
+      image: hashicorp/vault:1.20.4
+      securityContext:
+        runAsNonRoot: true
+        privileged: true
+        allowPrivilegeEscalation: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-sans-limites
+  namespace: rpg-pipeline
+spec:
+  containers:
+    - name: app
+      image: hashicorp/vault:1.20.4
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-tag-latest
+  namespace: rpg-pipeline
+spec:
+  containers:
+    - name: app
+      image: hashicorp/vault:latest
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-sans-tag
+  namespace: rpg-pipeline
+spec:
+  containers:
+    - name: app
+      image: hashicorp/vault
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-image-locale
+  namespace: rpg-pipeline
+spec:
+  containers:
+    - name: app
+      image: rpg-api:local
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-image-locale-hors-rpg-pipeline
+  namespace: default
+spec:
+  containers:
+    - name: app
+      image: rpg-api:local
+      securityContext:
+        runAsNonRoot: true
+        allowPrivilegeEscalation: false
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi

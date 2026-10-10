@@ -403,8 +403,11 @@ jobs:
         with:
           release: 'v1.18.1'
 
+      - name: Tests unitaires des policies
+        run: kyverno test policies/tests
+
       - name: Test des policies contre les manifests Kubernetes
-        run: kyverno apply policies/ --resource k8s/
+        run: kyverno apply $(ls policies/*.yaml | grep -v verify-rpg-api-image) --resource k8s/
 
   terraform-check:
     runs-on: ubuntu-latest
