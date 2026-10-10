@@ -76,11 +76,10 @@ jobs:
           sarif_file: trivy-jeu.sarif
           category: trivy-jeu
 
-  scan-api:
+  build-api:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      security-events: write
     steps:
       - name: Téléchargement du code source
         uses: actions/checkout@v7
@@ -88,12 +87,37 @@ jobs:
           submodules: true
 
       - name: Construction de l'image de l'API
-        run: docker build -t rpg-api -f rpg-api/Dockerfile .
+        run: docker build -t rpg-api:ci -f rpg-api/Dockerfile .
+
+      - name: Export de l'image
+        run: docker save rpg-api:ci -o rpg-api.tar
+
+      - name: Partage de l'image avec les autres jobs
+        uses: actions/upload-artifact@v7
+        with:
+          name: image-rpg-api
+          path: rpg-api.tar
+          retention-days: 1
+
+  scan-api:
+    needs: build-api
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Récupération de l'image de l'API
+        uses: actions/download-artifact@v8
+        with:
+          name: image-rpg-api
+
+      - name: Chargement de l'image
+        run: docker load -i rpg-api.tar
 
       - name: Scan de vulnérabilités de l'API
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: rpg-api
+          image-ref: rpg-api:ci
           severity: HIGH,CRITICAL
           ignore-unfixed: true
           limit-severities-for-sarif: true
@@ -165,6 +189,7 @@ jobs:
         run: python -m pytest rpg-api/tests/test_app.py -v
 
   dast-api:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -184,17 +209,21 @@ jobs:
           artifact_name: 'zap-scan-results'
 
   dast-api-local:
+    needs: build-api
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - name: Téléchargement du code source
         uses: actions/checkout@v7
-        with:
-          submodules: true
 
-      - name: Construction de l'image de l'API
-        run: docker build -t rpg-api:pr -f rpg-api/Dockerfile .
+      - name: Récupération de l'image de l'API
+        uses: actions/download-artifact@v8
+        with:
+          name: image-rpg-api
+
+      - name: Chargement de l'image
+        run: docker load -i rpg-api.tar
 
       - name: Génération de secrets jetables
         run: |
@@ -205,7 +234,7 @@ jobs:
           } > ci.env
 
       - name: Lancement de l'API
-        run: docker run -d --name rpg-api-pr -p 5000:5000 --env-file ci.env rpg-api:pr
+        run: docker run -d --name rpg-api-pr -p 5000:5000 --env-file ci.env rpg-api:ci
 
       - name: Attente que l'API réponde
         run: |
@@ -245,6 +274,7 @@ jobs:
       - scan-api
       - sast-api
       - tests-api
+      - dast-api-local
       - iac-scan-checkov
       - kyverno-policy-test
       - terraform-check
@@ -255,11 +285,6 @@ jobs:
       packages: write
       id-token: write
     steps:
-      - name: Téléchargement du code source
-        uses: actions/checkout@v7
-        with:
-          submodules: true
-
       - name: Calcul du nom d'image en minuscule
         id: image
         run: echo "name=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/rpg-api" >> "$GITHUB_OUTPUT"
@@ -271,14 +296,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Construction et publication de l'image API
-        id: build
-        uses: docker/build-push-action@v7.2.0
+      - name: Récupération de l'image testée
+        uses: actions/download-artifact@v8
         with:
-          context: .
-          file: rpg-api/Dockerfile
-          push: true
-          tags: ${{ steps.image.outputs.name }}:${{ github.sha }}
+          name: image-rpg-api
+
+      - name: Chargement de l'image
+        run: docker load -i rpg-api.tar
+
+      - name: Publication de l'image API
+        id: build
+        run: |
+          docker tag rpg-api:ci ${{ steps.image.outputs.name }}:${{ github.sha }}
+          docker push ${{ steps.image.outputs.name }}:${{ github.sha }} | tee push.log
+          DIGEST=$(grep -o 'sha256:[a-f0-9]\{64\}' push.log | tail -1)
+          test -n "$DIGEST"
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
 
       - name: Installation de Syft
         uses: anchore/sbom-action/download-syft@v0.24.0
