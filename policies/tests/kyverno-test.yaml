@@ -1,0 +1,89 @@
+apiVersion: cli.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: tests-policies-rpg
+policies:
+  - ../disallow-latest-tag.yaml
+  - ../disallow-privileged.yaml
+  - ../require-non-root-user.yaml
+  - ../require-resource-limits.yaml
+  - ../restrict-image-registry.yaml
+resources:
+  - resources.yaml
+results:
+  - policy: require-non-root-user
+    rule: check-runasnonroot
+    kind: Pod
+    resources:
+      - pod-conforme
+    result: pass
+  - policy: require-non-root-user
+    rule: check-runasnonroot
+    kind: Pod
+    resources:
+      - pod-root
+    result: fail
+
+  - policy: disallow-privileged
+    rule: check-privileged
+    kind: Pod
+    resources:
+      - pod-conforme
+    result: pass
+  - policy: disallow-privileged
+    rule: check-privileged
+    kind: Pod
+    resources:
+      - pod-privilegie
+    result: fail
+
+  - policy: require-resource-limits
+    rule: check-resource-limits
+    kind: Pod
+    resources:
+      - pod-conforme
+    result: pass
+  - policy: require-resource-limits
+    rule: check-resource-limits
+    kind: Pod
+    resources:
+      - pod-sans-limites
+    result: fail
+
+  - policy: disallow-latest-tag
+    rule: validate-image-tag
+    kind: Pod
+    resources:
+      - pod-conforme
+    result: pass
+  - policy: disallow-latest-tag
+    rule: validate-image-tag
+    kind: Pod
+    resources:
+      - pod-tag-latest
+    result: fail
+  - policy: disallow-latest-tag
+    rule: require-image-tag
+    kind: Pod
+    resources:
+      - pod-sans-tag
+    result: fail
+
+  - policy: restrict-image-registry
+    rule: registre-autorise
+    kind: Pod
+    resources:
+      - pod-conforme
+    result: pass
+  - policy: restrict-image-registry
+    rule: registre-autorise
+    kind: Pod
+    resources:
+      - pod-image-locale
+    result: fail
+  - policy: restrict-image-registry
+    rule: registre-autorise
+    kind: Pod
+    resources:
+      - pod-image-locale-hors-rpg-pipeline
+    result: skip
