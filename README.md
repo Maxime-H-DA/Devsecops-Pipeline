@@ -9,7 +9,7 @@ All of it is applied to a Flask API running in production at [rpg-pipeline.onren
 **At a glance**
 - 12 CI jobs on every push and pull request, 10 of them required to merge; the image is published and signed only if all checks pass
 - The Docker image is built once, scanned (Trivy), attacked (OWASP ZAP), then that exact image is signed (Cosign)
-- Only images signed by the pipeline can run in the cluster, enforced by Kyverno
+- Only the image signed by the pipeline runs: Render deploys its exact digest, and Kyverno enforces it in the cluster
 - 58 unit tests (98% coverage), including attack tests, and 16 tests for the Kyverno policies
 - 189 Trivy alerts triaged, HTTP (ZAP) and Kubernetes (Checkov) misconfigurations fixed
 - 17 Terraform resources to rebuild the entire environment
@@ -35,12 +35,12 @@ push / pull request -> main
  |    `-- dast-api-local: smoke test + OWASP ZAP against the running container
  |
  `-- step 3, on main only, if everything passed:
-      `-- supply-chain-api: publishing, SBOM (Syft), signing (Cosign)
+      `-- supply-chain-api: publishing, SBOM (Syft), signing (Cosign), deployment to Render
 
 On main, dast-api also scans the live API (Render) with OWASP ZAP, as monitoring.
 ```
 
-Scans run before the merge, not after. Pre-commit hooks rerun most of these checks locally before the push even happens, results show up in the **Security > Code scanning** tab, and Dependabot keeps dependencies up to date by going through the same checks.
+Scans run before the merge, not after, and Render no longer builds anything: it only deploys the image the pipeline has tested and signed. Pre-commit hooks rerun most of these checks locally before the push even happens, results show up in the **Security > Code scanning** tab, and Dependabot keeps dependencies up to date by going through the same checks.
 
 ## Deployment
 
@@ -85,7 +85,7 @@ The API is available at **http://localhost:5000**
 
 ### Terraform and Vault
 
-Full version: Terraform rebuilds the cluster, Kyverno, Vault, the application and the monitoring stack. The cluster runs the image signed by the pipeline, pulled from GitHub Container Registry; Kyverno verifies its signature and pins its digest. Secrets are encrypted in Vault and injected at pod startup by a sidecar; each pod authenticates with its own ServiceAccount, with read-only, time-limited access.
+Full version: Terraform rebuilds the cluster, Kyverno, Vault, the application and the monitoring stack. The cluster runs the image signed by the pipeline, pulled from GitHub Container Registry; Kyverno verifies its signature and pins its digest. Secrets are encrypted in Vault and injected at pod startup by a sidecar; each pod authenticates with its own ServiceAccount, with read-only, time-limited access. Outbound traffic is restricted: pods can only reach the cluster DNS and Vault.
 
 <details>
 <summary>Commands</summary>
