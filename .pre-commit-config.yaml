@@ -21,12 +21,16 @@ repos:
     rev: '3.3.6'
     hooks:
       - id: checkov
+        entry: checkov
         files: ^k8s/.*\.ya?ml$
-        args: ["--directory", "k8s/", "--framework", "kubernetes", "--compact"]
+        pass_filenames: false
+        args: ["--directory", "k8s/", "--framework", "kubernetes", "--compact", "--quiet"]
       - id: checkov
         name: checkov (terraform)
+        entry: checkov
         files: ^terraform/.*\.tf$
-        args: ["--directory", "terraform/", "--framework", "terraform", "--compact"]
+        pass_filenames: false
+        args: ["--directory", "terraform/", "--framework", "terraform", "--compact", "--quiet"]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
