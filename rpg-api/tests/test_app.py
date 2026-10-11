@@ -521,3 +521,11 @@ def test_init_db_ne_reimporte_pas_une_base_existante(tmp_path, monkeypatch):
     nombre = conn.execute("SELECT COUNT(*) FROM monstres").fetchone()[0]
     conn.close()
     assert nombre == 1
+
+def test_version_par_defaut(client, monkeypatch):
+    monkeypatch.delenv("APP_VERSION", raising=False)
+    assert client.get("/version").get_json() == {"version": "dev"}
+
+def test_version_lue_dans_l_environnement(client, monkeypatch):
+    monkeypatch.setenv("APP_VERSION", "abc123")
+    assert client.get("/version").get_json() == {"version": "abc123"}

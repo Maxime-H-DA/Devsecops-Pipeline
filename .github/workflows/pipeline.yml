@@ -87,7 +87,7 @@ jobs:
           submodules: true
 
       - name: Construction de l'image de l'API
-        run: docker build -t rpg-api:ci -f rpg-api/Dockerfile .
+        run: docker build -t rpg-api:ci --build-arg APP_VERSION=${{ github.sha }} -f rpg-api/Dockerfile .
 
       - name: Export de l'image
         run: docker save rpg-api:ci -o rpg-api.tar
@@ -189,16 +189,24 @@ jobs:
         run: python -m pytest rpg-api/tests/test_app.py -v --cov=app --cov-fail-under=95
 
   dast-api:
+    needs: supply-chain-api
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       issues: write
     steps:
-      - name: Réveil de l'API Render
+      - name: Attente de cette version sur Render
         run: |
-          curl --retry 5 --retry-delay 10 --retry-connrefused \
-            https://rpg-pipeline.onrender.com
-          sleep 15
+          for i in $(seq 1 30); do
+            VERSION=$(curl -s --max-time 60 https://rpg-pipeline.onrender.com/version | jq -r '.version' 2>/dev/null || true)
+            if [ "$VERSION" = "${{ github.sha }}" ]; then
+              echo "Render sert la version $VERSION"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Render ne sert pas la version ${{ github.sha }} après 5 minutes"
+          exit 1
 
       - name: OWASP ZAP sur l'API Render
         continue-on-error: true
