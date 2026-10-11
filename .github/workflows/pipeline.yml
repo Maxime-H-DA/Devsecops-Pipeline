@@ -183,12 +183,10 @@ jobs:
           python-version: '3.14'
 
       - name: Installation des dépendances
-        run: pip install -r rpg-api/requirements.txt
+        run: pip install -r rpg-api/requirements-dev.txt
 
       - name: Lancement des tests unitaires
-        run: |
-          pip install pytest-cov
-          python -m pytest rpg-api/tests/test_app.py -v --cov=app --cov-fail-under=95
+        run: python -m pytest rpg-api/tests/test_app.py -v --cov=app --cov-fail-under=95
 
   dast-api:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -358,6 +356,15 @@ jobs:
           docker push ${{ steps.image.outputs.name }}:main | tee push-main.log
           DIGEST_MAIN=$(grep -o 'sha256:[a-f0-9]\{64\}' push-main.log | tail -1)
           test "$DIGEST_MAIN" = "${{ steps.build.outputs.digest }}"
+
+      - name: Déploiement sur Render de l'image signée
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          IMAGE="${{ steps.image.outputs.name }}@${{ steps.build.outputs.digest }}"
+          IMAGE_ENCODEE=$(jq -rn --arg v "$IMAGE" '$v|@uri')
+          curl -fsS -X POST "${RENDER_DEPLOY_HOOK_URL}&imgURL=${IMAGE_ENCODEE}" > /dev/null
+          echo "Déploiement demandé : $IMAGE"
 
   iac-scan-checkov:
     runs-on: ubuntu-latest
