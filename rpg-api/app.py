@@ -173,6 +173,9 @@ def index():
 def get_actions():
     return jsonify(ACTIONS_DISPONIBLES)
 
+@app.route("/version")
+def version():
+    return jsonify({"version": os.environ.get("APP_VERSION", "dev")})
 
 @app.route("/login", methods=["POST"])
 @limiter.limit("5 per minute;20 per hour;50 per day")

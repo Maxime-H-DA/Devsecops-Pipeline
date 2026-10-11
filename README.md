@@ -10,7 +10,7 @@ All of it is applied to a Flask API running in production at [rpg-pipeline.onren
 - 12 CI jobs on every push and pull request, 10 of them required to merge; the image is published and signed only if all checks pass
 - The Docker image is built once, scanned (Trivy), attacked (OWASP ZAP), then that exact image is signed (Cosign)
 - Only the image signed by the pipeline runs: Render deploys its exact digest, and Kyverno enforces it in the cluster
-- 58 unit tests (98% coverage), including attack tests, and 16 tests for the Kyverno policies
+- 60 unit tests (98% coverage), including attack tests, and 16 tests for the Kyverno policies
 - 189 Trivy alerts triaged, HTTP (ZAP) and Kubernetes (Checkov) misconfigurations fixed
 - 17 Terraform resources to rebuild the entire environment
 - Secrets encrypted in Vault, never stored in plaintext in the cluster
@@ -37,7 +37,7 @@ push / pull request -> main
  `-- step 3, on main only, if everything passed:
       `-- supply-chain-api: publishing, SBOM (Syft), signing (Cosign), deployment to Render
 
-On main, dast-api also scans the live API (Render) with OWASP ZAP, as monitoring.
+On main, after the deployment, dast-api waits until Render serves this exact commit (/version), then scans it with OWASP ZAP, as monitoring.
 ```
 
 Scans run before the merge, not after, and Render no longer builds anything: it only deploys the image the pipeline has tested and signed. Pre-commit hooks rerun most of these checks locally before the push even happens, results show up in the **Security > Code scanning** tab, and Dependabot keeps dependencies up to date by going through the same checks.

@@ -14,6 +14,10 @@ COPY rpg-api/static/ static/
 COPY rpg-source/monsters.csv .
 
 RUN useradd -m -u 10001 appuser && chown -R appuser:appuser /app
+
+ARG APP_VERSION=dev
+ENV APP_VERSION=$APP_VERSION
+
 USER appuser
 
 EXPOSE 5000
