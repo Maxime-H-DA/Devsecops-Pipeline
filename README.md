@@ -62,27 +62,6 @@ docker run -d -p 5000:5000 --env-file .env -v rpg-data:/app/data rpg-api
 
 The API is available at **http://localhost:5000**
 
-### Helm
-
-First version of the Kubernetes deployment (Kind), before Vault: non-root container, read-only filesystem, resource limits, health probes and NetworkPolicy. Secrets still go through a Kubernetes `Secret`.
-
-<details>
-<summary>Commands</summary>
-
-```
-kind create cluster --config k8s/kind-config.yaml
-docker build -t rpg-api:local -f rpg-api/Dockerfile .
-kind load docker-image rpg-api:local --name rpg-pipeline
-helm install rpg-api helm/rpg-api --namespace rpg-pipeline --create-namespace
-kubectl create secret generic rpg-api-secret --namespace rpg-pipeline --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
-kubectl rollout restart deployment/rpg-api -n rpg-pipeline
-kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
-```
-
-</details>
-
-The API is available at **http://localhost:5000**
-
 ### Terraform and Vault
 
 Full version: Terraform rebuilds the cluster, Kyverno, Vault, the application and the monitoring stack. The cluster runs the image signed by the pipeline, pulled from GitHub Container Registry; Kyverno verifies its signature and pins its digest. Secrets are encrypted in Vault and injected at pod startup by a sidecar; each pod authenticates with its own ServiceAccount, with read-only, time-limited access. Outbound traffic is restricted: pods can only reach the cluster DNS and Vault.

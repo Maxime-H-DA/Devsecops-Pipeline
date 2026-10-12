@@ -380,23 +380,11 @@ jobs:
       - name: Téléchargement du code source
         uses: actions/checkout@v7
 
-      - name: Installation de Helm
-        uses: azure/setup-helm@v5
-
       - name: Scan Checkov des manifests Kubernetes
         uses: bridgecrewio/checkov-action@v12.3108.0
         with:
           directory: k8s/
           framework: kubernetes
-          output_format: cli
-          soft_fail: false
-
-      - name: Scan Checkov du chart Helm
-        if: always()
-        uses: bridgecrewio/checkov-action@v12.3108.0
-        with:
-          directory: helm/
-          framework: helm
           output_format: cli
           soft_fail: false
 
