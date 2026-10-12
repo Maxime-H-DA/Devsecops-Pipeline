@@ -71,6 +71,7 @@ resource "kubectl_manifest" "rpg_serviceaccount" {
 resource "kubectl_manifest" "rpg_deployment" {
   yaml_body        = file("${path.module}/../k8s/02-deployment.yaml")
   wait_for_rollout = false
+  ignore_fields    = ["spec.template.spec.containers.0.image"]
   depends_on = [
     kubectl_manifest.rpg_pvc,
     kubectl_manifest.rpg_serviceaccount,
