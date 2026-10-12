@@ -12,7 +12,8 @@ All of it is applied to a Flask API running in production at [rpg-pipeline.onren
 - Only the image signed by the pipeline runs: Render deploys its exact digest, and Kyverno enforces it in the cluster
 - 60 unit tests (98% coverage), including attack tests, and 16 tests for the Kyverno policies
 - 189 Trivy alerts triaged, HTTP (ZAP) and Kubernetes (Checkov) misconfigurations fixed
-- 17 Terraform resources to rebuild the entire environment
+- 14 Terraform resources rebuild the platform; Argo CD deploys the application from Git
+- Argo CD keeps the cluster identical to Git: manual changes and deletions are reverted automatically
 - Secrets encrypted in Vault, never stored in plaintext in the cluster
 
 ## CI/CD Pipeline
@@ -64,7 +65,7 @@ The API is available at **http://localhost:5000**
 
 ### Terraform and Vault
 
-Full version: Terraform rebuilds the cluster, Kyverno, Vault, the application and the monitoring stack. The cluster runs the image signed by the pipeline, pulled from GitHub Container Registry; Kyverno verifies its signature and pins its digest. Secrets are encrypted in Vault and injected at pod startup by a sidecar; each pod authenticates with its own ServiceAccount, with read-only, time-limited access. Outbound traffic is restricted: pods can only reach the cluster DNS and Vault.
+Full version: Terraform rebuilds the platform (cluster, Kyverno, Vault, monitoring, Argo CD), and Argo CD deploys the application. The cluster runs the image signed by the pipeline, pulled from GitHub Container Registry; Kyverno verifies its signature and pins its digest. Secrets are encrypted in Vault and injected at pod startup by a sidecar; each pod authenticates with its own ServiceAccount, with read-only, time-limited access. Outbound traffic is restricted: pods can only reach the cluster DNS and Vault.
 
 <details>
 <summary>Commands</summary>
@@ -92,6 +93,23 @@ After a Docker or PC restart, Vault starts sealed:
 </details>
 
 The API is available at **http://localhost:5000**
+
+## GitOps
+
+Argo CD deploys the application from `k8s/` on the `main` branch, so only code that has passed every check reaches the cluster. It keeps the cluster identical to Git: a manual change or a deleted resource is reverted automatically, within seconds. Terraform builds the platform, Argo CD manages the application, and Kyverno still checks everything Argo CD creates.
+
+<details>
+<summary>Commands</summary>
+
+```
+$pw = kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}"
+[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($pw))
+kubectl port-forward -n argocd svc/argocd-server 8080:443
+```
+
+</details>
+
+Argo CD is available at **https://localhost:8080** (user `admin`, self-signed certificate).
 
 ## Monitoring
 
@@ -121,7 +139,7 @@ The script fetches the monsters from the live API and updates `monsters.csv` bef
 
 ## Tools Used
 
-- **CI/CD & infrastructure**: GitHub Actions, Docker, Kubernetes (Kind), Helm, Terraform, Alpine Linux, Dependabot
+- **CI/CD & infrastructure**: GitHub Actions, Docker, Kubernetes (Kind), Helm, Terraform, Argo CD, Alpine Linux, Dependabot
 - **Security**: Gitleaks, Trivy, Bandit, Semgrep, OWASP ZAP, Cppcheck, Checkov, Kyverno, Syft, Cosign, HashiCorp Vault
 - **Backend & testing**: Flask, Gunicorn, SQLite, JWT, pytest
 - **Observability**: Prometheus, Grafana

@@ -9,6 +9,9 @@ if (-not (Test-Path $fichierCles)) {
 
 kubectl wait --for=jsonpath='{.status.phase}'=Running pod/vault-0 -n vault --timeout=180s
 
+kubectl exec -n vault vault-0 -- mkdir -p /vault/audit
+kubectl exec -n vault vault-0 -- chmod u+x /vault/audit
+
 $keys = Import-Clixml $fichierCles | ForEach-Object { [System.Net.NetworkCredential]::new("", $_).Password }
 
 kubectl exec -n vault vault-0 -- vault operator unseal $keys[0] | Out-Null
