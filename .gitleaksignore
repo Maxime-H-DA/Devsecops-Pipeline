@@ -1,1 +1,3 @@
+# Fichier .emv commite par erreur le 25/05/2026 (commit 2d4c2b6) : cle JWT et identifiants admin.
+# Valeurs revoquees et remplacees partout (.env, Vault, Render) en octobre 2026 : exception volontaire.
 .emv:generic-api-key:1
