@@ -57,40 +57,6 @@ resource "kubectl_manifest" "rpg_namespace" {
   yaml_body = file("${path.module}/../k8s/00-namespace.yaml")
 }
 
-resource "kubectl_manifest" "rpg_pvc" {
-  yaml_body  = file("${path.module}/../k8s/05-pvc.yaml")
-  depends_on = [kubectl_manifest.rpg_namespace]
-}
-
-resource "kubectl_manifest" "rpg_serviceaccount" {
-  yaml_body  = file("${path.module}/../k8s/06-serviceaccount.yaml")
-  depends_on = [kubectl_manifest.rpg_namespace]
-}
-
-
-resource "kubectl_manifest" "rpg_deployment" {
-  yaml_body        = file("${path.module}/../k8s/02-deployment.yaml")
-  wait_for_rollout = false
-  ignore_fields    = ["spec.template.spec.containers.0.image"]
-  depends_on = [
-    kubectl_manifest.rpg_pvc,
-    kubectl_manifest.rpg_serviceaccount,
-    helm_release.vault,
-    kubectl_manifest.kyverno_policies,
-  ]
-}
-
-
-resource "kubectl_manifest" "rpg_service" {
-  yaml_body  = file("${path.module}/../k8s/03-service.yaml")
-  depends_on = [kubectl_manifest.rpg_namespace]
-}
-
-resource "kubectl_manifest" "rpg_networkpolicy" {
-  yaml_body  = file("${path.module}/../k8s/04-networkpolicy.yaml")
-  depends_on = [kubectl_manifest.rpg_namespace]
-}
-
 
 resource "helm_release" "monitoring" {
   name             = "monitoring"
@@ -113,4 +79,24 @@ resource "kubectl_manifest" "rpg_podmonitor" {
 resource "kubectl_manifest" "rpg_alerts" {
   yaml_body  = file("${path.module}/../monitoring/rpg-api-alerts.yaml")
   depends_on = [helm_release.monitoring, kubectl_manifest.rpg_namespace]
+}
+
+
+resource "helm_release" "argocd" {
+  name             = "argocd"
+  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-cd"
+  version          = "10.9.6"
+  namespace        = "argocd"
+  create_namespace = true
+}
+
+resource "kubectl_manifest" "argocd_app_rpg_api" {
+  yaml_body = file("${path.module}/../argocd/rpg-api.yaml")
+  depends_on = [
+    helm_release.argocd,
+    kubectl_manifest.kyverno_policies,
+    kubectl_manifest.rpg_namespace,
+    helm_release.vault,
+  ]
 }
