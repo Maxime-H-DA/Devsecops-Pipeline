@@ -25,7 +25,7 @@ push / pull request -> main
  |    |-- scan-jeu: Docker build (game) + Trivy
  |    |-- sast-api: Bandit + Semgrep
  |    |-- tests-api: pytest, minimum 95% coverage
- |    |-- iac-scan-checkov: Kubernetes manifests, Helm chart and Terraform
+ |    |-- iac-scan-checkov: Kubernetes manifests and Terraform
  |    |-- kyverno-policy-test: policy unit tests + policies replayed against the manifests
  |    |-- terraform-check: Terraform code formatting and validation
  |    `-- build-api: Docker build of the API, done once
@@ -44,7 +44,7 @@ Scans run before the merge, not after, and Render no longer builds anything: it 
 
 ## Deployment
 
-All three methods need a `.env` file at the root of the repo with `API_SECRET_KEY`, `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Commands are for PowerShell (Windows).
+Both methods need a `.env` file at the root of the repo with `API_SECRET_KEY`, `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Commands are for PowerShell (Windows).
 
 ### Docker
 
