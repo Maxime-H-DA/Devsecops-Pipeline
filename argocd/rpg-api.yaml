@@ -9,8 +9,6 @@ spec:
     repoURL: https://github.com/Maxime-H-DA/Devsecops-Pipeline.git
     targetRevision: main
     path: k8s
-    directory:
-      exclude: '00-namespace.yaml'
   destination:
     server: https://kubernetes.default.svc
     namespace: rpg-pipeline
