@@ -9,7 +9,7 @@ All of it is applied to a Flask API running in production at [rpg-pipeline.onren
 **At a glance**
 - 12 CI jobs on every push and pull request, 10 of them required to merge; the image is published and signed only if all checks pass
 - The Docker image is built once, scanned (Trivy), attacked (OWASP ZAP), then that exact image is signed (Cosign)
-- Only the image signed by the pipeline runs: Render deploys its exact digest, and Kyverno enforces it in the cluster
+- Only the image signed by the pipeline runs: Render deploys its exact digest, and the cluster picks up each new signed image automatically, verified by Kyverno
 - 60 unit tests (98% coverage), including attack tests, and 16 tests for the Kyverno policies
 - 189 Trivy alerts triaged, HTTP (ZAP) and Kubernetes (Checkov) misconfigurations fixed
 - 14 Terraform resources rebuild the platform; Argo CD deploys the application from Git
@@ -96,7 +96,7 @@ The API is available at **http://localhost:5000**
 
 ## GitOps
 
-Argo CD deploys the application from `k8s/` on the `main` branch, so only code that has passed every check reaches the cluster. It keeps the cluster identical to Git: a manual change or a deleted resource is reverted automatically, within seconds. Terraform builds the platform, Argo CD manages the application, and Kyverno still checks everything Argo CD creates.
+Argo CD deploys the application from `k8s/` on the `main` branch, so only code that has passed every check reaches the cluster. It keeps the cluster identical to Git: a manual change or a deleted resource is reverted automatically, within seconds. Terraform builds the platform, Argo CD manages the application, and Kyverno still checks everything Argo CD creates. Argo CD Image Updater watches the `main` tag on GitHub Container Registry: when the pipeline signs a new image, it records the new digest and Argo CD deploys it, with no manual step.
 
 <details>
 <summary>Commands</summary>
