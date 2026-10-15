@@ -1,0 +1,15 @@
+apiVersion: argocd-image-updater.argoproj.io/v1alpha1
+kind: ImageUpdater
+metadata:
+  name: rpg-api
+  namespace: argocd
+spec:
+  writeBackConfig:
+    method: argocd
+  applicationRefs:
+    - namePattern: rpg-api
+      images:
+        - alias: api
+          imageName: ghcr.io/maxime-h-da/rpg-api:main
+          commonUpdateSettings:
+            updateStrategy: digest

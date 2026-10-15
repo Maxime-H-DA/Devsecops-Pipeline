@@ -92,11 +92,30 @@ resource "helm_release" "argocd" {
 }
 
 resource "kubectl_manifest" "argocd_app_rpg_api" {
-  yaml_body = file("${path.module}/../argocd/rpg-api.yaml")
+  yaml_body     = file("${path.module}/../argocd/rpg-api.yaml")
+  ignore_fields = ["spec.source.kustomize"]
   depends_on = [
     helm_release.argocd,
     kubectl_manifest.kyverno_policies,
     kubectl_manifest.rpg_namespace,
     helm_release.vault,
+  ]
+}
+
+
+resource "helm_release" "argocd_image_updater" {
+  name       = "argocd-image-updater"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argocd-image-updater"
+  version    = "1.3.1"
+  namespace  = "argocd"
+  depends_on = [helm_release.argocd]
+}
+
+resource "kubectl_manifest" "argocd_image_updater_rpg_api" {
+  yaml_body = file("${path.module}/../argocd/rpg-api-image-updater.yaml")
+  depends_on = [
+    helm_release.argocd_image_updater,
+    kubectl_manifest.argocd_app_rpg_api,
   ]
 }
