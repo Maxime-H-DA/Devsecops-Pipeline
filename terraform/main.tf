@@ -27,6 +27,7 @@ resource "helm_release" "kyverno" {
   version          = "3.9.1"
   namespace        = "kyverno"
   create_namespace = true
+  timeout          = 900
 }
 
 provider "kubectl" {
@@ -66,7 +67,7 @@ resource "helm_release" "monitoring" {
   namespace        = "monitoring"
   create_namespace = true
   values           = [file("${path.module}/../monitoring/values.yaml")]
-  timeout          = 600
+  timeout          = 900
 }
 
 
@@ -89,6 +90,7 @@ resource "helm_release" "argocd" {
   version          = "10.9.6"
   namespace        = "argocd"
   create_namespace = true
+  timeout          = 900
 }
 
 resource "kubectl_manifest" "argocd_app_rpg_api" {
@@ -109,6 +111,7 @@ resource "helm_release" "argocd_image_updater" {
   chart      = "argocd-image-updater"
   version    = "1.3.1"
   namespace  = "argocd"
+  timeout    = 900
   depends_on = [helm_release.argocd]
 }
 
