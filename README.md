@@ -9,7 +9,7 @@ All of it is applied to a Flask API running in production at [rpg-pipeline.onren
 **At a glance**
 - 12 CI jobs on every push and pull request, 10 of them required to merge; the image is published and signed only if all checks pass
 - The Docker image is built once, scanned (Trivy), attacked (OWASP ZAP), then that exact image is signed (Cosign)
-- Only the image signed by the pipeline runs: Render deploys its exact digest, and the cluster picks up each new signed image automatically, with its signature and signed SBOM verified by Kyverno
+- Only the image signed by the pipeline runs: Render deploys its exact digest, and the cluster picks up each new signed image automatically, verified by Kyverno
 - 60 unit tests (98% coverage), including attack tests, and 16 tests for the Kyverno policies
 - 189 Trivy alerts triaged, HTTP (ZAP) and Kubernetes (Checkov) misconfigurations fixed
 - 16 Terraform resources rebuild the platform; Argo CD deploys the application from Git
@@ -65,7 +65,7 @@ The API is available at **http://localhost:5000**
 
 ### Terraform and Vault
 
-Full version: Terraform rebuilds the platform (cluster, Kyverno, Vault, monitoring, Argo CD and Image Updater), and Argo CD deploys the application. The cluster runs the image signed by the pipeline, pulled from GitHub Container Registry; Kyverno verifies its signature and its signed SBOM before any pod starts. Secrets are encrypted in Vault and injected at pod startup by a sidecar; each pod authenticates with its own ServiceAccount, with read-only, time-limited access. Outbound traffic is restricted: pods can only reach the cluster DNS and Vault.
+Full version: Terraform rebuilds the platform (cluster, Kyverno, Vault, monitoring, Argo CD and Image Updater), and Argo CD deploys the application. The cluster runs the image signed by the pipeline, pulled from GitHub Container Registry; Kyverno verifies its signature before any pod starts. Secrets are encrypted in Vault and injected at pod startup by a sidecar; each pod authenticates with its own ServiceAccount, with read-only, time-limited access. Outbound traffic is restricted: pods can only reach the cluster DNS and Vault.
 
 <details>
 <summary>Commands</summary>
