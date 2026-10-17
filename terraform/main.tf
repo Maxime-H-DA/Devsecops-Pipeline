@@ -28,6 +28,7 @@ resource "helm_release" "kyverno" {
   namespace        = "kyverno"
   create_namespace = true
   timeout          = 900
+  values           = [yamlencode({ config = { maxContextSize = "2Mi" } })]
 }
 
 provider "kubectl" {
