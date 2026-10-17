@@ -45,3 +45,12 @@ spec:
                     subject: "https://github.com/Maxime-H-DA/Devsecops-Pipeline/.github/workflows/pipeline.yml@refs/heads/main"
                     rekor:
                       url: https://rekor.sigstore.dev
+          attestations:
+            - type: https://spdx.dev/Document
+              attestors:
+                - entries:
+                    - keyless:
+                        issuer: "https://token.actions.githubusercontent.com"
+                        subject: "https://github.com/Maxime-H-DA/Devsecops-Pipeline/.github/workflows/pipeline.yml@refs/heads/main"
+                        rekor:
+                          url: https://rekor.sigstore.dev
