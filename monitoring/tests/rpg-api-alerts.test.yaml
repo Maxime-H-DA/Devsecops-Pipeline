@@ -1,0 +1,27 @@
+rule_files:
+  - rpg-api-alerts.rules.yaml
+evaluation_interval: 1m
+tests:
+  - name: Rafale d'echecs de connexion
+    interval: 1m
+    input_series:
+      - series: 'rpg_api_login_echecs_total{pod="rpg-api-a"}'
+        values: '0+3x15'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForceBruteLogin
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: "Rafale d'echecs de connexion sur l'API"
+              description: "Plus de 10 connexions refusees sur /login en 5 minutes : possible attaque par force brute."
+  - name: Echecs isoles sans alerte
+    interval: 1m
+    input_series:
+      - series: 'rpg_api_login_echecs_total{pod="rpg-api-a"}'
+        values: '0+1x15'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ForceBruteLogin
+        exp_alerts: []
