@@ -422,6 +422,19 @@ jobs:
       - name: Test des policies contre les manifests Kubernetes
         run: kyverno apply $(ls policies/*.yaml | grep -v verify-rpg-api-image) --resource k8s/
 
+      - name: Extraction des règles des PrometheusRule
+        run: |
+          mkdir -p /tmp/alertes
+          cp falco/tests/*.test.yaml monitoring/tests/*.test.yaml /tmp/alertes/
+          docker run --rm -v "$PWD:/workdir" mikefarah/yq:4.45.1 '.spec' falco/falco-alerts.yaml > /tmp/alertes/falco-alerts.rules.yaml
+          docker run --rm -v "$PWD:/workdir" mikefarah/yq:4.45.1 '.spec' monitoring/rpg-api-alerts.yaml > /tmp/alertes/rpg-api-alerts.rules.yaml
+
+      - name: Vérification de la syntaxe des alertes Prometheus
+        run: docker run --rm -v /tmp/alertes:/alertes --entrypoint promtool quay.io/prometheus/prometheus:v3.14.0-distroless check rules /alertes/falco-alerts.rules.yaml /alertes/rpg-api-alerts.rules.yaml
+
+      - name: Tests unitaires des alertes Prometheus
+        run: docker run --rm -v /tmp/alertes:/alertes --entrypoint promtool quay.io/prometheus/prometheus:v3.14.0-distroless test rules /alertes/falco-alerts.test.yaml /alertes/rpg-api-alerts.test.yaml
+
   terraform-check:
     runs-on: ubuntu-latest
     defaults:

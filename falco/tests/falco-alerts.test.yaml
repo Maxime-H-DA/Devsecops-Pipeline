@@ -1,0 +1,104 @@
+rule_files:
+  - falco-alerts.rules.yaml
+evaluation_interval: 1m
+tests:
+  - name: Processus inattendu, premiere detection sur un compteur neuf
+    interval: 1m
+    input_series:
+      - series: 'falcosecurity_falco_rules_matches_total{rule_name="Processus inattendu dans rpg-api", pod="falco-a"}'
+        values: '_x10 1x10'
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: RpgApiProcessusInattendu
+        exp_alerts: []
+      - eval_time: 11m
+        alertname: RpgApiProcessusInattendu
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              rule_name: Processus inattendu dans rpg-api
+            exp_annotations:
+              summary: "Processus inattendu dans un conteneur rpg-api"
+              description: "Un processus autre que gunicorn a ete lance dans rpg-api : shell ou commande executee, possible execution de code a distance. Voir les logs Falco."
+      - eval_time: 17m
+        alertname: RpgApiProcessusInattendu
+        exp_alerts: []
+      - eval_time: 11m
+        alertname: RpgApiLectureTardiveSecrets
+        exp_alerts: []
+  - name: Processus inattendu, compteur existant qui augmente
+    interval: 1m
+    input_series:
+      - series: 'falcosecurity_falco_rules_matches_total{rule_name="Processus inattendu dans rpg-api", pod="falco-a"}'
+        values: '1x10 2x10'
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: RpgApiProcessusInattendu
+        exp_alerts: []
+      - eval_time: 12m
+        alertname: RpgApiProcessusInattendu
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              rule_name: Processus inattendu dans rpg-api
+            exp_annotations:
+              summary: "Processus inattendu dans un conteneur rpg-api"
+              description: "Un processus autre que gunicorn a ete lance dans rpg-api : shell ou commande executee, possible execution de code a distance. Voir les logs Falco."
+      - eval_time: 18m
+        alertname: RpgApiProcessusInattendu
+        exp_alerts: []
+  - name: Lecture tardive, premiere detection sur un compteur neuf
+    interval: 1m
+    input_series:
+      - series: 'falcosecurity_falco_rules_matches_total{rule_name="Lecture tardive des secrets rpg-api", pod="falco-a"}'
+        values: '_x10 1x10'
+    alert_rule_test:
+      - eval_time: 9m
+        alertname: RpgApiLectureTardiveSecrets
+        exp_alerts: []
+      - eval_time: 11m
+        alertname: RpgApiLectureTardiveSecrets
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              rule_name: Lecture tardive des secrets rpg-api
+            exp_annotations:
+              summary: "Lecture tardive des secrets de rpg-api"
+              description: "Un processus vivant depuis plus de 60 secondes a lu /etc/secrets : possible code injecte dans l'API. Voir les logs Falco."
+      - eval_time: 11m
+        alertname: RpgApiProcessusInattendu
+        exp_alerts: []
+  - name: Falco disparait
+    interval: 1m
+    input_series:
+      - series: 'up{job="falco-metrics", pod="falco-a"}'
+        values: '1x10'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: FalcoAbsent
+        exp_alerts: []
+      - eval_time: 19m
+        alertname: FalcoAbsent
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: "Falco ne fonctionne plus"
+              description: "Aucune instance Falco n'est collectee depuis 2 minutes : la detection a l'execution est aveugle."
+  - name: Falco ne repond plus
+    interval: 1m
+    input_series:
+      - series: 'up{job="falco-metrics", pod="falco-a"}'
+        values: '1x10 0x10'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: FalcoAbsent
+        exp_alerts: []
+      - eval_time: 14m
+        alertname: FalcoAbsent
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: "Falco ne fonctionne plus"
+              description: "Aucune instance Falco n'est collectee depuis 2 minutes : la detection a l'execution est aveugle."
