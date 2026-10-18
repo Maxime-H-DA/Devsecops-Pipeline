@@ -84,6 +84,25 @@ resource "kubectl_manifest" "rpg_alerts" {
 }
 
 
+resource "helm_release" "falco" {
+  name             = "falco"
+  repository       = "https://falcosecurity.github.io/charts"
+  chart            = "falco"
+  version          = "9.2.0"
+  namespace        = "falco"
+  create_namespace = true
+  values           = [file("${path.module}/../falco/values.yaml")]
+  timeout          = 900
+  depends_on       = [helm_release.monitoring]
+}
+
+
+resource "kubectl_manifest" "falco_alerts" {
+  yaml_body  = file("${path.module}/../falco/falco-alerts.yaml")
+  depends_on = [helm_release.falco, helm_release.monitoring]
+}
+
+
 resource "helm_release" "argocd" {
   name             = "argocd"
   repository       = "https://argoproj.github.io/argo-helm"
