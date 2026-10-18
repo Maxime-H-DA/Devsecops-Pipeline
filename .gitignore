@@ -19,6 +19,7 @@ sbom-rpg-api.*.json
 terraform/.terraform/
 *.tfstate
 *.tfstate.*
+*.tfplan
 crash.log
 terraform/*-config
 
