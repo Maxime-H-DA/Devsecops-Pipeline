@@ -1,0 +1,47 @@
+driver:
+  kind: modern_ebpf
+  modernEbpf:
+    leastPrivileged: true
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    add:
+      - BPF
+      - SYS_RESOURCE
+      - PERFMON
+      - SYS_PTRACE
+falcoctl:
+  artifact:
+    install:
+      enabled: false
+    follow:
+      enabled: false
+metrics:
+  enabled: true
+serviceMonitor:
+  create: true
+  labels:
+    release: monitoring
+customRules:
+  rpg-api.yaml: |-
+    - rule: Processus inattendu dans rpg-api
+      desc: Tout processus lance dans le conteneur rpg-api hors gunicorn et hors hook de demarrage Docker Desktop
+      condition: >
+        spawned_process
+        and k8s.ns.name = "rpg-pipeline"
+        and container.name = "rpg-api"
+        and not (proc.name = "gunicorn" and proc.pname = "containerd-shim")
+        and not (proc.name = "mount-product-f" and proc.pname startswith "runc:")
+        and not (proc.pname = "mount-product-f" and proc.aname[2] startswith "runc:")
+      output: "Processus inattendu dans rpg-api | process=%proc.name exe=%proc.exepath parent=%proc.pname cmdline=%proc.cmdline user=%user.uid pod=%k8s.pod.name"
+      priority: WARNING
+    - rule: Lecture tardive des secrets rpg-api
+      desc: Lecture de /etc/secrets par un processus vivant depuis plus de 60 secondes dans rpg-api
+      condition: >
+        open_read
+        and fd.name startswith "/etc/secrets/"
+        and k8s.ns.name = "rpg-pipeline"
+        and container.name = "rpg-api"
+        and proc.duration > 60000000000
+      output: "Lecture tardive des secrets rpg-api | process=%proc.name exe=%proc.exepath file=%fd.name age_ns=%proc.duration pod=%k8s.pod.name"
+      priority: CRITICAL

@@ -1,0 +1,39 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: falco-rpg-api
+  namespace: falco
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: falco-rpg-api.rules
+      rules:
+        - alert: RpgApiProcessusInattendu
+          expr: |
+            (sum by (rule_name) (increase(falcosecurity_falco_rules_matches_total{rule_name="Processus inattendu dans rpg-api"}[5m])) > 0)
+            or
+            (sum by (rule_name) (falcosecurity_falco_rules_matches_total{rule_name="Processus inattendu dans rpg-api"} unless falcosecurity_falco_rules_matches_total{rule_name="Processus inattendu dans rpg-api"} offset 5m) > 0)
+          labels:
+            severity: warning
+          annotations:
+            summary: "Processus inattendu dans un conteneur rpg-api"
+            description: "Un processus autre que gunicorn a ete lance dans rpg-api : shell ou commande executee, possible execution de code a distance. Voir les logs Falco."
+        - alert: RpgApiLectureTardiveSecrets
+          expr: |
+            (sum by (rule_name) (increase(falcosecurity_falco_rules_matches_total{rule_name="Lecture tardive des secrets rpg-api"}[5m])) > 0)
+            or
+            (sum by (rule_name) (falcosecurity_falco_rules_matches_total{rule_name="Lecture tardive des secrets rpg-api"} unless falcosecurity_falco_rules_matches_total{rule_name="Lecture tardive des secrets rpg-api"} offset 5m) > 0)
+          labels:
+            severity: critical
+          annotations:
+            summary: "Lecture tardive des secrets de rpg-api"
+            description: "Un processus vivant depuis plus de 60 secondes a lu /etc/secrets : possible code injecte dans l'API. Voir les logs Falco."
+        - alert: FalcoAbsent
+          expr: absent(up{job="falco-metrics"} == 1)
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Falco ne fonctionne plus"
+            description: "Aucune instance Falco n'est collectee depuis 2 minutes : la detection a l'execution est aveugle."
