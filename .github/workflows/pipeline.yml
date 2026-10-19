@@ -351,7 +351,7 @@ jobs:
           path: sbom-rpg-api.*.json
 
       - name: Installation de Cosign
-        uses: sigstore/cosign-installer@v3.10.1
+        uses: sigstore/cosign-installer@v4.1.2
 
       - name: Signature keyless de l'image (Sigstore)
         run: |
