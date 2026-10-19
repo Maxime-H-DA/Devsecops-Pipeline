@@ -1,0 +1,2697 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://scout.docker.com/public/vex-05b21dedd528ace4daec0eec3f9970c894b210d1b28dfdc6d8eaa341b259278c",
+  "author": "Docker Hardened Images \u003cdhi@docker.com\u003e",
+  "role": "Document Creator",
+  "version": 1,
+  "tooling": "Docker Scout",
+  "statements": [
+    {
+      "@id": "175dc971-06c8-48e6-a305-0f493f9ec805",
+      "vulnerability": {
+        "name": "CVE-2010-0928"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/openssl@3.5.7-1~deb13u3%2Bdhi0?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/openssl@3.5.7-1~deb13u3%2Bdhi0?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libssl3t64"
+        },
+        {
+          "@id": "pkg:deb/debian/openssl-provider-legacy"
+        },
+        {
+          "@id": "pkg:deb/debian/openssl"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libssl3t64"
+            },
+            {
+              "@id": "pkg:deb/debian/openssl-provider-legacy"
+            },
+            {
+              "@id": "pkg:deb/debian/openssl"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Fault injection based attacks are not within OpenSSLs threat model according to the security policy and this CVE is not treated as security bug by upstream: https://www.openssl.org/policies/general/security-policy.html",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2025-08-05T20:34:39Z"
+    },
+    {
+      "@id": "2aeaaf62-b062-41cd-a2fe-be93203ab58a",
+      "vulnerability": {
+        "name": "CVE-2010-0928"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/openssl@3.5.7-1~deb13u3%2Bdhi0?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/openssl@3.5.7-1~deb13u3%2Bdhi0?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libssl3t64"
+        },
+        {
+          "@id": "pkg:deb/debian/openssl-provider-legacy"
+        },
+        {
+          "@id": "pkg:deb/debian/openssl"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libssl3t64"
+            },
+            {
+              "@id": "pkg:deb/debian/openssl-provider-legacy"
+            },
+            {
+              "@id": "pkg:deb/debian/openssl"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Fault injection based attacks are not within OpenSSLs threat model according to the security policy and this CVE is not treated as security bug by upstream: https://www.openssl.org/policies/general/security-policy.html",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-06-03T05:48:42Z"
+    },
+    {
+      "@id": "9dc5ded0-325c-4a40-a279-d7e142aaa9e2",
+      "vulnerability": {
+        "name": "CVE-2010-4756"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Standard POSIX behavior in glibc. Applications using glob need to impose limits themselves. Requires authenticated access and is considered unimportant by Debian.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-04-17T13:05:53Z"
+    },
+    {
+      "@id": "f0944954-d316-409f-a85d-24d83475d523",
+      "vulnerability": {
+        "name": "CVE-2018-20796"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Not treated as vulnerability by upstream glibc. Listed under glibc Security Exceptions.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-04-17T13:05:54Z"
+    },
+    {
+      "@id": "decda072-45ac-4725-b041-06bcc71a5770",
+      "vulnerability": {
+        "name": "CVE-2019-1010022"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Classified as non-security bug by upstream. Stack guard protection bypass is considered unimportant.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-04-17T13:05:56Z"
+    },
+    {
+      "@id": "6d584033-32de-471d-bc98-b842d79c7e47",
+      "vulnerability": {
+        "name": "CVE-2019-1010023"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Requires user to explicitly run ldd on malicious ELF files. Classified as non-security bug by upstream.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-04-17T13:05:57Z"
+    },
+    {
+      "@id": "94def891-3fc5-4faf-9e57-aba6d82757a3",
+      "vulnerability": {
+        "name": "CVE-2019-1010024"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "ASLR bypass using thread stack and heap cache. Not treated as security bug by upstream.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-04-17T13:05:58Z"
+    },
+    {
+      "@id": "25e440eb-470e-4546-b1e9-7626a6c316c6",
+      "vulnerability": {
+        "name": "CVE-2019-1010025"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "ASLR bypass for pthread_created thread heap addresses. Vendor states ASLR bypass itself is not a vulnerability.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-04-17T13:05:59Z"
+    },
+    {
+      "@id": "cc92ac30-43db-439b-88bc-d00a16ab0ddd",
+      "vulnerability": {
+        "name": "CVE-2019-9192"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Uncontrolled recursion in regex processing. Maintainer disputes this as a vulnerability as it only occurs with crafted patterns.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-04-17T13:06:00Z"
+    },
+    {
+      "@id": "bbde06b7-0a46-48ab-abb2-f1798b8597f7",
+      "vulnerability": {
+        "name": "CVE-2021-45346"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/sqlite3@3.46.1-7%2Bdeb13u2%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/sqlite3@3.46.1-7%2Bdeb13u2%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libsqlite3-0"
+        },
+        {
+          "@id": "pkg:deb/debian/sqlite3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libsqlite3-0"
+            },
+            {
+              "@id": "pkg:deb/debian/sqlite3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "The developer disputes this as a vulnerability stating that if you give SQLite a corrupted database file and submit a query against the database, it might read parts of the database that you did not intend or expect.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-05-20T19:12:50Z"
+    },
+    {
+      "@id": "58fa7c1a-3323-4655-b602-509efd45cc26",
+      "vulnerability": {
+        "name": "CVE-2022-0563"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libuuid1"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libuuid1"
+            },
+            {
+              "@id": "pkg:deb/debian/util-linux"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Package util-linux in Debian does build with readline support but chfn and chsh are provided by src:shadow and util-linux is configured with --disable-chfn-chsh.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-06-18T21:02:20Z"
+    },
+    {
+      "@id": "58fa7c1a-3323-4655-b602-509efd45cc26",
+      "vulnerability": {
+        "name": "CVE-2022-0563"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libuuid1"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libuuid1"
+            },
+            {
+              "@id": "pkg:deb/debian/util-linux"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Package util-linux in Debian does build with readline support but chfn and chsh are provided by src:shadow and util-linux is configured with --disable-chfn-chsh.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-06-18T21:02:20Z"
+    },
+    {
+      "@id": "58fa7c1a-3323-4655-b602-509efd45cc26",
+      "vulnerability": {
+        "name": "CVE-2022-0563"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libuuid1"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libuuid1"
+            },
+            {
+              "@id": "pkg:deb/debian/util-linux"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Package util-linux in Debian does build with readline support but chfn and chsh are provided by src:shadow and util-linux is configured with --disable-chfn-chsh.",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-06-18T21:02:20Z"
+    },
+    {
+      "@id": "0ac2c0df-af40-447c-b47b-bef485209975",
+      "vulnerability": {
+        "name": "CVE-2025-47273"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/setuptools@70.3.0"
+        },
+        {
+          "@id": "pkg:pypi/setuptools@70.3.0"
+        },
+        {
+          "@id": "pkg:pypi/setuptools"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/setuptools"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Scanners report setuptools@70.3.0 when pip 26.2's CycloneDX vendor BOM is ingested. DHI python3-pip ships the upstream pip wheel unchanged: pip vendors only a stripped pkg_resources tree derived from setuptools 70.3.0 and does not ship setuptools/package_index.py where this path-traversal flaw lives.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-07-30T18:09:47Z"
+    },
+    {
+      "@id": "c119f893-d2dc-4482-855a-29495c309f07",
+      "vulnerability": {
+        "name": "CVE-2025-47273"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/setuptools@70.3.0"
+        },
+        {
+          "@id": "pkg:pypi/setuptools@70.3.0"
+        },
+        {
+          "@id": "pkg:pypi/setuptools"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/setuptools"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Scanners report setuptools@70.3.0 when pip 26.2's CycloneDX vendor BOM is ingested. DHI python3-pip ships the upstream pip wheel unchanged: pip vendors only a stripped pkg_resources tree derived from setuptools 70.3.0 and does not ship setuptools/package_index.py where this path-traversal flaw lives.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-07-30T18:09:57Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2025-6141",
+      "vulnerability": {
+        "name": "CVE-2025-6141"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/ncurses@6.5%2B20250216-2%2Bdhi4?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses@6.5%2B20250216-2%2Bdhi4?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libncursesw6"
+        },
+        {
+          "@id": "pkg:deb/debian/libtinfo6"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses-base"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses-bin"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libncursesw6"
+            },
+            {
+              "@id": "pkg:deb/debian/libtinfo6"
+            },
+            {
+              "@id": "pkg:deb/debian/ncurses-base"
+            },
+            {
+              "@id": "pkg:deb/debian/ncurses-bin"
+            },
+            {
+              "@id": "pkg:deb/debian/ncurses"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2025-6141",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T05:35:30Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2025-66382",
+      "vulnerability": {
+        "name": "CVE-2025-66382"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libexpat1"
+        },
+        {
+          "@id": "pkg:deb/debian/expat"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libexpat1"
+            },
+            {
+              "@id": "pkg:deb/debian/expat"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2025-66382",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T05:35:42Z"
+    },
+    {
+      "@id": "cbbb37c0-641d-4131-9633-04a23515c025",
+      "vulnerability": {
+        "name": "CVE-2025-69720"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/ncurses@6.5%2B20250216-2%2Bdhi4?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses@6.5%2B20250216-2%2Bdhi4?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libncursesw6"
+        },
+        {
+          "@id": "pkg:deb/debian/libtinfo6"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses-base"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses-bin"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libncursesw6"
+            },
+            {
+              "@id": "pkg:deb/debian/libtinfo6"
+            },
+            {
+              "@id": "pkg:deb/debian/ncurses-base"
+            },
+            {
+              "@id": "pkg:deb/debian/ncurses-bin"
+            },
+            {
+              "@id": "pkg:deb/debian/ncurses"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Patch applied: standalone fix extracted from upstream ncurses 6.5 patch 20251213 (https://invisible-island.net/archives/ncurses/6.5/ncurses-6.5-20251213.patch.gz). Fixes buffer overflow in infocmp analyze_string() and use-after-free in tic SGR checking.",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-04-27T23:03:49Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2025-69720",
+      "vulnerability": {
+        "name": "CVE-2025-69720"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/ncurses@6.5%2B20250216-2%2Bdhi4?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses@6.5%2B20250216-2%2Bdhi4?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libncursesw6"
+        },
+        {
+          "@id": "pkg:deb/debian/libtinfo6"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses-base"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses-bin"
+        },
+        {
+          "@id": "pkg:deb/debian/ncurses"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libncursesw6"
+            },
+            {
+              "@id": "pkg:deb/debian/libtinfo6"
+            },
+            {
+              "@id": "pkg:deb/debian/ncurses-base"
+            },
+            {
+              "@id": "pkg:deb/debian/ncurses-bin"
+            },
+            {
+              "@id": "pkg:deb/debian/ncurses"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2025-69720",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T05:39:44Z"
+    },
+    {
+      "@id": "cd1b9de6-a4d7-422a-891b-e2144c5343eb",
+      "vulnerability": {
+        "name": "CVE-2025-70873"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/sqlite3@3.46.1-7%2Bdeb13u2%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/sqlite3@3.46.1-7%2Bdeb13u2%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libsqlite3-0"
+        },
+        {
+          "@id": "pkg:deb/debian/sqlite3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libsqlite3-0"
+            },
+            {
+              "@id": "pkg:deb/debian/sqlite3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "The zipfile extension is not built for Debian binary package builds.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-05-20T19:12:52Z"
+    },
+    {
+      "@id": "5d004839-1adf-4756-94c2-6d27da3e0706",
+      "vulnerability": {
+        "name": "CVE-2026-102010"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14-base"
+        },
+        {
+          "@id": "pkg:deb/debian/libgcc-s1"
+        },
+        {
+          "@id": "pkg:deb/debian/libstdc++6"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/gcc-14-base"
+            },
+            {
+              "@id": "pkg:deb/debian/libgcc-s1"
+            },
+            {
+              "@id": "pkg:deb/debian/libstdc++6"
+            },
+            {
+              "@id": "pkg:deb/debian/gcc-14"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Upstream GCC commit aaa8351f4d2e636f9680a1f0a8ebc2f0a60611e6 updates m_a_entries after reallocating the pb_ds binary_heap entry array in erase_if, fixing the use-after-free in libstdc++. Debian has not published a security upload yet; see https://security-tracker.debian.org/tracker/CVE-2026-102010",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-02T00:46:13Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-102010",
+      "vulnerability": {
+        "name": "CVE-2026-102010"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14-base"
+        },
+        {
+          "@id": "pkg:deb/debian/libgcc-s1"
+        },
+        {
+          "@id": "pkg:deb/debian/libstdc++6"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/gcc-14-base"
+            },
+            {
+              "@id": "pkg:deb/debian/libgcc-s1"
+            },
+            {
+              "@id": "pkg:deb/debian/libstdc++6"
+            },
+            {
+              "@id": "pkg:deb/debian/gcc-14"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-102010",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-10-14T11:41:11Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-18374",
+      "vulnerability": {
+        "name": "CVE-2026-18374"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-18374",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T05:52:45Z"
+    },
+    {
+      "@id": "ecdbed59-22b7-422e-9b22-ae7f68349640",
+      "vulnerability": {
+        "name": "CVE-2026-19499"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Upstream fix for strfmon right-justification buffer overflow (BZ #34510) backported into this DHI glibc rebuild; see https://sourceware.org/pipermail/libc-alpha/2026-August/172345.html",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-08-28T13:40:56Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-19499",
+      "vulnerability": {
+        "name": "CVE-2026-19499"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-19499",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T05:53:00Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-19542",
+      "vulnerability": {
+        "name": "CVE-2026-19542"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-19542",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T05:52:50Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-27171",
+      "vulnerability": {
+        "name": "CVE-2026-27171"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/zlib@1%3A1.3.dfsg%2Breally1.3.1-1%2Bdhi4?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/zlib@1%3A1.3.dfsg%2Breally1.3.1-1%2Bdhi4?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/zlib1g"
+        },
+        {
+          "@id": "pkg:deb/debian/zlib"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/zlib1g"
+            },
+            {
+              "@id": "pkg:deb/debian/zlib"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-27171",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T06:00:04Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-3184",
+      "vulnerability": {
+        "name": "CVE-2026-3184"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libuuid1"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libuuid1"
+            },
+            {
+              "@id": "pkg:deb/debian/util-linux"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-3184",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T06:05:31Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-42250",
+      "vulnerability": {
+        "name": "CVE-2026-42250"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/bzip2@1.0.8-6%2Bdhi2?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/bzip2@1.0.8-6%2Bdhi2?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libbz2-1.0"
+        },
+        {
+          "@id": "pkg:deb/debian/bzip2"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libbz2-1.0"
+            },
+            {
+              "@id": "pkg:deb/debian/bzip2"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-42250",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T06:06:51Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-50812",
+      "vulnerability": {
+        "name": "CVE-2026-50812"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/sqlite3@3.46.1-7%2Bdeb13u2%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/sqlite3@3.46.1-7%2Bdeb13u2%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libsqlite3-0"
+        },
+        {
+          "@id": "pkg:deb/debian/sqlite3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libsqlite3-0"
+            },
+            {
+              "@id": "pkg:deb/debian/sqlite3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-50812",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T06:22:11Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-50813",
+      "vulnerability": {
+        "name": "CVE-2026-50813"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/sqlite3@3.46.1-7%2Bdeb13u2%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/sqlite3@3.46.1-7%2Bdeb13u2%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libsqlite3-0"
+        },
+        {
+          "@id": "pkg:deb/debian/sqlite3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libsqlite3-0"
+            },
+            {
+              "@id": "pkg:deb/debian/sqlite3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-50813",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T06:22:11Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-5358",
+      "vulnerability": {
+        "name": "CVE-2026-5358"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-5358",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-04-22T22:12:14Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-5435",
+      "vulnerability": {
+        "name": "CVE-2026-5435"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-5435",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T06:29:38Z"
+    },
+    {
+      "@id": "6dfb4ed5-c8f2-4085-85c2-b77790f8468d",
+      "vulnerability": {
+        "name": "CVE-2026-5713"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/python-3.14@3.14.8-0?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/python-3.14@3.14.8-0?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libpython-3.14-minimal"
+        },
+        {
+          "@id": "pkg:deb/debian/libpython-3.14-stdlib"
+        },
+        {
+          "@id": "pkg:deb/debian/libpython-3.14"
+        },
+        {
+          "@id": "pkg:deb/debian/python-3.14-minimal"
+        },
+        {
+          "@id": "pkg:deb/debian/python-3.14"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libpython-3.14-minimal"
+            },
+            {
+              "@id": "pkg:deb/debian/libpython-3.14-stdlib"
+            },
+            {
+              "@id": "pkg:deb/debian/libpython-3.14"
+            },
+            {
+              "@id": "pkg:deb/debian/python-3.14-minimal"
+            },
+            {
+              "@id": "pkg:deb/debian/python-3.14"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Python 3.14.6 includes the upstream remote debugging / asyncio introspection bounds-check fix from https://github.com/python/cpython/pull/148187, so the vulnerable code is not present in the shipped DHI package.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-07-02T11:31:03Z"
+    },
+    {
+      "@id": "8d0b2c22-9f58-4cda-9645-2b2929323a0b",
+      "vulnerability": {
+        "name": "CVE-2026-57585"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/msgpack@1.1.2"
+        },
+        {
+          "@id": "pkg:pypi/msgpack@1.1.2"
+        },
+        {
+          "@id": "pkg:pypi/msgpack"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/msgpack"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "pip's vendored msgpack is the pure-Python fallback only (fallback.py, ext.py, exceptions.py). CVE-2026-57585 is a use-after-free in the Cython _cmsgpack extension; pip does not ship that native module and always falls back to the pure-Python implementation.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-07-30T18:09:49Z"
+    },
+    {
+      "@id": "eb840f87-5eae-4e4a-ae21-412ec7fb7513",
+      "vulnerability": {
+        "name": "CVE-2026-57585"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/msgpack@1.1.2"
+        },
+        {
+          "@id": "pkg:pypi/msgpack@1.1.2"
+        },
+        {
+          "@id": "pkg:pypi/msgpack"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/msgpack"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "pip's vendored msgpack is the pure-Python fallback only (fallback.py, ext.py, exceptions.py). CVE-2026-57585 is a use-after-free in the Cython _cmsgpack extension; pip does not ship that native module and always falls back to the pure-Python implementation.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-07-30T18:09:59Z"
+    },
+    {
+      "@id": "e3a579ec-e646-4d4e-8b7b-0d2900f319b6",
+      "vulnerability": {
+        "name": "CVE-2026-59890"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/setuptools@70.3.0"
+        },
+        {
+          "@id": "pkg:pypi/setuptools@70.3.0"
+        },
+        {
+          "@id": "pkg:pypi/setuptools"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/setuptools"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Same pip vendor BOM artifact as CVE-2025-47273. The MANIFEST.in Unicode-normalization sdist exclusion bug is in setuptools' sdist build path; pip does not ship that code—only a pkg_resources subset for importlib metadata.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-07-30T18:09:48Z"
+    },
+    {
+      "@id": "11c24dd7-dc60-4dd3-bf11-5c633d8016a9",
+      "vulnerability": {
+        "name": "CVE-2026-59890"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/setuptools@70.3.0"
+        },
+        {
+          "@id": "pkg:pypi/setuptools@70.3.0"
+        },
+        {
+          "@id": "pkg:pypi/setuptools"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/setuptools"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Same pip vendor BOM artifact as CVE-2025-47273. The MANIFEST.in Unicode-normalization sdist exclusion bug is in setuptools' sdist build path; pip does not ship that code—only a pkg_resources subset for importlib metadata.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-07-30T18:09:58Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-6238",
+      "vulnerability": {
+        "name": "CVE-2026-6238"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-6238",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T06:30:55Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-6368",
+      "vulnerability": {
+        "name": "CVE-2026-6368"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-6368",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T06:31:10Z"
+    },
+    {
+      "@id": "a16db7e8-46d5-411c-94ef-5a339c2c69f5",
+      "vulnerability": {
+        "name": "CVE-2026-66046"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libexpat1"
+        },
+        {
+          "@id": "pkg:deb/debian/expat"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libexpat1"
+            },
+            {
+              "@id": "pkg:deb/debian/expat"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Fixed in DHI expat 2.8.3-1~deb13u1+dhi1 by backporting upstream libexpat PR #1321 (merge commit e97a6c453a4ef0595953e3f72f64ad1b74afc96a), which migrates storeAtts() isCdata lookup from a linear scan to a hash table and removes the quadratic CPU complexity.",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-08-20T12:49:06Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-6791",
+      "vulnerability": {
+        "name": "CVE-2026-6791"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-6791",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T06:41:48Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-76642",
+      "vulnerability": {
+        "name": "CVE-2026-76642"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libuuid1"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libuuid1"
+            },
+            {
+              "@id": "pkg:deb/debian/util-linux"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-76642",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T07:01:00Z"
+    },
+    {
+      "@id": "3f8a0992-d690-491e-9031-9ce658200e4f",
+      "vulnerability": {
+        "name": "CVE-2026-76956"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libexpat1"
+        },
+        {
+          "@id": "pkg:deb/debian/expat"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libexpat1"
+            },
+            {
+              "@id": "pkg:deb/debian/expat"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Fixed in DHI expat 2.8.3-1~deb13u1+dhi2 by backporting upstream libexpat PR #1326 (merge commit 5935b102a528a85401ff982263b176c28df26618), which correctly treats getentropy() returning zero as success and preserves strong entropy for hash-flooding protection.",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-08-21T20:35:30Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-77117",
+      "vulnerability": {
+        "name": "CVE-2026-77117"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-77117",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T07:01:05Z"
+    },
+    {
+      "@id": "1e8a7f88-59c0-49da-9035-123c0942ec9d",
+      "vulnerability": {
+        "name": "CVE-2026-77214"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libexpat1"
+        },
+        {
+          "@id": "pkg:deb/debian/expat"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libexpat1"
+            },
+            {
+              "@id": "pkg:deb/debian/expat"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Mitigated by backporting upstream libexpat PR #1393 (commit 4d9b1c499ecb66323260a7274edcf86c5eab0517), which rejects XML_ParseBuffer lengths that exceed remaining internal buffer capacity. See https://security-tracker.debian.org/tracker/CVE-2026-77214.",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-06T14:40:26Z"
+    },
+    {
+      "@id": "afa6d73a-d0b0-41f5-b66e-2e933a876b9e",
+      "vulnerability": {
+        "name": "CVE-2026-77214"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libexpat1"
+        },
+        {
+          "@id": "pkg:deb/debian/expat"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libexpat1"
+            },
+            {
+              "@id": "pkg:deb/debian/expat"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Mitigated by backporting upstream libexpat PR #1393 (commit 4d9b1c499ecb66323260a7274edcf86c5eab0517), which rejects XML_ParseBuffer lengths that exceed remaining internal buffer capacity. See https://security-tracker.debian.org/tracker/CVE-2026-77214.",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-06T14:40:30Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-78408",
+      "vulnerability": {
+        "name": "CVE-2026-78408"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libuuid1"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libuuid1"
+            },
+            {
+              "@id": "pkg:deb/debian/util-linux"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-78408",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-10-05T17:30:42Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-78409",
+      "vulnerability": {
+        "name": "CVE-2026-78409"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libuuid1"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libuuid1"
+            },
+            {
+              "@id": "pkg:deb/debian/util-linux"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-78409",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T07:01:11Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-78410",
+      "vulnerability": {
+        "name": "CVE-2026-78410"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux@2.41.5-0%2Bdeb13u1%2Bdhi3?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libuuid1"
+        },
+        {
+          "@id": "pkg:deb/debian/util-linux"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libuuid1"
+            },
+            {
+              "@id": "pkg:deb/debian/util-linux"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-78410",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T07:01:13Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-80489",
+      "vulnerability": {
+        "name": "CVE-2026-80489"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-80489",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-21T07:05:10Z"
+    },
+    {
+      "@id": "2f135020-089f-4366-b0c0-9e349fab1b63",
+      "vulnerability": {
+        "name": "CVE-2026-85091"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/zlib@1%3A1.3.dfsg%2Breally1.3.1-1%2Bdhi4?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/zlib@1%3A1.3.dfsg%2Breally1.3.1-1%2Bdhi4?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/zlib1g"
+        },
+        {
+          "@id": "pkg:deb/debian/zlib"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/zlib1g"
+            },
+            {
+              "@id": "pkg:deb/debian/zlib"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "DHI rebuilds prevent a failed direct-buffer gzwrite from leaving a caller-owned input pointer available to gzprintf or gzvprintf. The +dhi4 rebuild applies the pointer-state reset from upstream commit https://github.com/madler/zlib/commit/df84af25dc1942490e1d1c899a07619152a46148 in the equivalent zlib 1.3.1 error branch; +dhi3 guards the later formatting entry points. See https://security-tracker.debian.org/tracker/CVE-2026-85091.",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-09-04T16:47:14Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-8674",
+      "vulnerability": {
+        "name": "CVE-2026-8674"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-8674",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-09-25T18:39:49Z"
+    },
+    {
+      "@id": "9205c8e3-ff80-4831-8d3e-59f30fd6dc12",
+      "vulnerability": {
+        "name": "CVE-2026-86805"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Upstream fix for AT_SECURE $ORIGIN rpath TOCTOU in ld.so (BZ #34360, GLIBC-SA-2026-0022) backported into this DHI glibc rebuild; see https://sourceware.org/git/?p=glibc.git;a=commit;h=ed0c137b97eb940b4b64981e84ed806d3276edd9",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-09-23T23:12:35Z"
+    },
+    {
+      "@id": "dfcfd206-9135-43a8-a99e-c71b9da46d7b",
+      "vulnerability": {
+        "name": "CVE-2026-86805"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Upstream fix for AT_SECURE $ORIGIN rpath TOCTOU in ld.so (BZ #34360, GLIBC-SA-2026-0022) backported into this DHI glibc rebuild; see https://sourceware.org/git/?p=glibc.git;a=commit;h=ed0c137b97eb940b4b64981e84ed806d3276edd9",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-09-23T23:12:54Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-86805",
+      "vulnerability": {
+        "name": "CVE-2026-86805"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-86805",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-10-11T07:29:42Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-89092",
+      "vulnerability": {
+        "name": "CVE-2026-89092"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-89092",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-10-11T07:29:46Z"
+    },
+    {
+      "@id": "50f1cb1a-5679-4fa1-9650-9136c2dcaa9b",
+      "vulnerability": {
+        "name": "CVE-2026-93990"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/expat@2.8.3-1~deb13u1%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libexpat1"
+        },
+        {
+          "@id": "pkg:deb/debian/expat"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libexpat1"
+            },
+            {
+              "@id": "pkg:deb/debian/expat"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Fixed in DHI expat 2.8.3-1~deb13u1+dhi4 by backporting upstream libexpat PR #1282 (merge commit ff6e1d7e750bbe245178f51a47a965dc8342861a), which rejects UTF-16 high surrogates not followed by a low surrogate and prevents malformed surrogate pairs from hiding markup from the tokenizer.",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-09-21T17:32:45Z"
+    },
+    {
+      "@id": "9d9c8af6-205e-4112-90dc-91c77163264b",
+      "vulnerability": {
+        "name": "CVE-2026-95619"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14-base"
+        },
+        {
+          "@id": "pkg:deb/debian/libgcc-s1"
+        },
+        {
+          "@id": "pkg:deb/debian/libstdc++6"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/gcc-14-base"
+            },
+            {
+              "@id": "pkg:deb/debian/libgcc-s1"
+            },
+            {
+              "@id": "pkg:deb/debian/libstdc++6"
+            },
+            {
+              "@id": "pkg:deb/debian/gcc-14"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Upstream GCC commit 59d235ffa5a69231eb42e5290d52dc8c90d28b7a adds size_t overflow checks in libstdc++ aligned operator new paths so huge size/alignment pairs cannot wrap to undersized allocations. Debian has not published a security upload yet; see https://security-tracker.debian.org/tracker/CVE-2026-95619",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-02T18:21:45Z"
+    },
+    {
+      "@id": "c784cbdb-2d08-4eec-9bb1-02168954d7db",
+      "vulnerability": {
+        "name": "CVE-2026-95619"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14-base"
+        },
+        {
+          "@id": "pkg:deb/debian/libgcc-s1"
+        },
+        {
+          "@id": "pkg:deb/debian/libstdc++6"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/gcc-14-base"
+            },
+            {
+              "@id": "pkg:deb/debian/libgcc-s1"
+            },
+            {
+              "@id": "pkg:deb/debian/libstdc++6"
+            },
+            {
+              "@id": "pkg:deb/debian/gcc-14"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Upstream GCC commit 59d235ffa5a69231eb42e5290d52dc8c90d28b7a adds size_t overflow checks in libstdc++ aligned operator new paths so huge size/alignment pairs cannot wrap to undersized allocations. Debian has not published a security upload yet; see https://security-tracker.debian.org/tracker/CVE-2026-95619",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-02T18:21:46Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-95619",
+      "vulnerability": {
+        "name": "CVE-2026-95619"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14@14.2.0-19%2Bdhi5?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14-base"
+        },
+        {
+          "@id": "pkg:deb/debian/libgcc-s1"
+        },
+        {
+          "@id": "pkg:deb/debian/libstdc++6"
+        },
+        {
+          "@id": "pkg:deb/debian/gcc-14"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/gcc-14-base"
+            },
+            {
+              "@id": "pkg:deb/debian/libgcc-s1"
+            },
+            {
+              "@id": "pkg:deb/debian/libstdc++6"
+            },
+            {
+              "@id": "pkg:deb/debian/gcc-14"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-95619",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-10-10T00:48:59Z"
+    },
+    {
+      "@id": "fd032b06-a9d9-41ab-aa9c-7a33d4e0b766",
+      "vulnerability": {
+        "name": "CVE-2026-95818"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Upstream fix for AT_SECURE $ORIGIN stack buffer overflow in ld.so (BZ #34360, GLIBC-SA-2026-0023) backported into this DHI glibc rebuild; see https://sourceware.org/git/?p=glibc.git;a=commit;h=ed0c137b97eb940b4b64981e84ed806d3276edd9",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-09-23T23:12:35Z"
+    },
+    {
+      "@id": "ec36d66b-1e24-4ec8-a890-55c1ea269db7",
+      "vulnerability": {
+        "name": "CVE-2026-95818"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Upstream fix for AT_SECURE $ORIGIN stack buffer overflow in ld.so (BZ #34360, GLIBC-SA-2026-0023) backported into this DHI glibc rebuild; see https://sourceware.org/git/?p=glibc.git;a=commit;h=ed0c137b97eb940b4b64981e84ed806d3276edd9",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-09-23T23:12:55Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-95818",
+      "vulnerability": {
+        "name": "CVE-2026-95818"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-95818",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-10-11T07:29:41Z"
+    },
+    {
+      "@id": "ad4a83cf-fc9d-4e25-ac49-4741c6217222",
+      "vulnerability": {
+        "name": "CVE-2026-97399"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "GLIBC-SA-2026-0024 (CVE-2026-97399) is a one-byte overread in the Power8-specific strncasecmp optimization (BZ #34683). DHI pkg-glibc rebuilds target linux/amd64 and linux/arm64 only, so that Power8 implementation is not present in published glibc debs. See https://sourceware.org/git/?p=glibc.git;a=blob;f=advisories/GLIBC-SA-2026-0024",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-09-29T02:00:13Z"
+    },
+    {
+      "@id": "5cadab62-878f-480d-8f74-12473cf9d1a4",
+      "vulnerability": {
+        "name": "CVE-2026-97399"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "GLIBC-SA-2026-0024 (CVE-2026-97399) is a one-byte overread in the Power8-specific strncasecmp optimization (BZ #34683). DHI pkg-glibc rebuilds target linux/amd64 and linux/arm64 only, so that Power8 implementation is not present in published glibc debs. See https://sourceware.org/git/?p=glibc.git;a=blob;f=advisories/GLIBC-SA-2026-0024",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-09-29T02:00:18Z"
+    },
+    {
+      "@id": "debian-nodsa-CVE-2026-97399",
+      "vulnerability": {
+        "name": "CVE-2026-97399"
+      },
+      "products": [
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_distro=trixie\u0026os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc@2.41-12%2Bdeb13u4%2Bdhi1?os_name=debian\u0026os_version=13"
+        },
+        {
+          "@id": "pkg:deb/debian/libc6"
+        },
+        {
+          "@id": "pkg:deb/debian/glibc"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:deb/debian/libc6"
+            },
+            {
+              "@id": "pkg:deb/debian/glibc"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Marked no-dsa by Debian Security Team; see https://security-tracker.debian.org/tracker/CVE-2026-97399",
+      "justification": "vulnerable_code_cannot_be_controlled_by_adversary",
+      "timestamp": "2026-10-11T07:29:42Z"
+    },
+    {
+      "@id": "08a6df35-2e24-47da-97cb-8b67d71c25a8",
+      "vulnerability": {
+        "name": "CVE-2026-97687"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/urllib3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "DHI Alpine Python packages patch the bundled pip wheel with urllib3's upstream HTTPS proxy TLS-policy correction. DHI Debian Python images consume python3-pip 26.2.1-2, which carries the same correction. Both retain pip's vendored urllib3 2.7.0 metadata. Advisory: https://github.com/urllib3/urllib3/security/advisories/GHSA-8988-9cw3-xx77",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-11T04:29:29Z"
+    },
+    {
+      "@id": "c5eef327-f814-459c-b923-ab5dca9989c0",
+      "vulnerability": {
+        "name": "CVE-2026-97687"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/urllib3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "DHI Alpine Python packages patch the bundled pip wheel with urllib3's upstream HTTPS proxy TLS-policy correction. DHI Debian Python images consume python3-pip 26.2.1-2, which carries the same correction. Both retain pip's vendored urllib3 2.7.0 metadata. Advisory: https://github.com/urllib3/urllib3/security/advisories/GHSA-8988-9cw3-xx77",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-11T04:29:31Z"
+    },
+    {
+      "@id": "71301294-9a7e-4b2b-8f73-d64622970ef8",
+      "vulnerability": {
+        "name": "CVE-2026-97688"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/urllib3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "DHI Alpine Python packages patch the bundled pip wheel with urllib3's upstream Deflate streaming-loop correction. DHI Debian Python images consume python3-pip 26.2.1-2, which carries the same correction. Both retain pip's vendored urllib3 2.7.0 metadata. Advisory: https://github.com/urllib3/urllib3/security/advisories/GHSA-gh4c-6fx4-qh6g",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-11T04:29:30Z"
+    },
+    {
+      "@id": "51eb7882-023d-45d9-b296-226e2dbaa02f",
+      "vulnerability": {
+        "name": "CVE-2026-97688"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/urllib3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "DHI Alpine Python packages patch the bundled pip wheel with urllib3's upstream Deflate streaming-loop correction. DHI Debian Python images consume python3-pip 26.2.1-2, which carries the same correction. Both retain pip's vendored urllib3 2.7.0 metadata. Advisory: https://github.com/urllib3/urllib3/security/advisories/GHSA-gh4c-6fx4-qh6g",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-11T04:29:31Z"
+    },
+    {
+      "@id": "09ac755f-4685-4a74-9541-6a9c9d6ea560",
+      "vulnerability": {
+        "name": "CVE-2026-97689"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/urllib3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "DHI Alpine Python packages patch the bundled pip wheel with urllib3's upstream bounded chunk-line correction. DHI Debian Python images consume python3-pip 26.2.1-2, which carries the same correction. Both retain pip's vendored urllib3 2.7.0 metadata. Advisory: https://github.com/urllib3/urllib3/security/advisories/GHSA-vxq7-64xx-v4gw",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-11T04:29:32Z"
+    },
+    {
+      "@id": "50d65e3d-382d-4189-9cab-29924f0ec825",
+      "vulnerability": {
+        "name": "CVE-2026-97689"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3@2.7.0"
+        },
+        {
+          "@id": "pkg:pypi/urllib3"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/urllib3"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "DHI Alpine Python packages patch the bundled pip wheel with urllib3's upstream bounded chunk-line correction. DHI Debian Python images consume python3-pip 26.2.1-2, which carries the same correction. Both retain pip's vendored urllib3 2.7.0 metadata. Advisory: https://github.com/urllib3/urllib3/security/advisories/GHSA-vxq7-64xx-v4gw",
+      "justification": "inline_mitigations_already_exist",
+      "timestamp": "2026-10-11T04:29:32Z"
+    },
+    {
+      "@id": "fa90108e-d747-48c5-821d-fbcac15bb61b",
+      "vulnerability": {
+        "name": "GHSA-6v7p-g79w-8964"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/msgpack@1.1.2"
+        },
+        {
+          "@id": "pkg:pypi/msgpack@1.1.2"
+        },
+        {
+          "@id": "pkg:pypi/msgpack"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/msgpack"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Alias of CVE-2026-57585. pip vendors msgpack 1.1.2 without the vulnerable _cmsgpack C extension; only the pure-Python fallback is present under pip/_vendor/msgpack.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-07-30T18:09:51Z"
+    },
+    {
+      "@id": "babfd7ba-4272-4b2f-8b78-536607e104b1",
+      "vulnerability": {
+        "name": "GHSA-6v7p-g79w-8964"
+      },
+      "products": [
+        {
+          "@id": "pkg:pypi/msgpack@1.1.2"
+        },
+        {
+          "@id": "pkg:pypi/msgpack@1.1.2"
+        },
+        {
+          "@id": "pkg:pypi/msgpack"
+        },
+        {
+          "@id": "dhi.io/python:3.14.8-debian13",
+          "subcomponents": [
+            {
+              "@id": "pkg:pypi/msgpack"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "status_notes": "Alias of CVE-2026-57585. pip vendors msgpack 1.1.2 without the vulnerable _cmsgpack C extension; only the pure-Python fallback is present under pip/_vendor/msgpack.",
+      "justification": "vulnerable_code_not_present",
+      "timestamp": "2026-07-30T18:09:59Z"
+    }
+  ],
+  "timestamp": "2025-08-05T20:34:39Z",
+  "last_updated": "2026-10-14T11:41:11Z"
+}
