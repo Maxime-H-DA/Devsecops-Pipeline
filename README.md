@@ -57,7 +57,7 @@ The quickest way to run the API locally.
 
 ```
 docker build -t rpg-api -f rpg-api/Dockerfile .
-docker run -d -p 5000:5000 --env-file .env -v rpg-data:/app/data rpg-api
+docker run -d -p 5000:5000 --env-file .env rpg-api
 ```
 
 </details>
@@ -85,9 +85,10 @@ kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
 
 `init-vault.ps1` initializes and configures Vault, loads the secrets from `.env`, then revokes the root token. The unseal keys are encrypted with Windows DPAPI and stored in `.vault-keys/`, ignored by Git.
 
-After a Docker or PC restart, Vault starts sealed:
+After a Docker or PC restart, start the Kind node, then unseal Vault:
 
 ```
+docker start rpg-pipeline-control-plane
 .\vault\unseal-vault.ps1
 ```
 
