@@ -440,7 +440,7 @@ jobs:
         run: kyverno test policies/tests
 
       - name: Test des policies contre les manifests Kubernetes
-        run: kyverno apply $(ls policies/*.yaml | grep -v verify-rpg-api-image) --resource k8s/
+        run: kyverno apply $(ls policies/*.yaml | grep -v verify-rpg-api) --resource k8s/
 
       - name: Extraction des règles des PrometheusRule
         run: |
