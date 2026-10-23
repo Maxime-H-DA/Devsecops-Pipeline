@@ -28,7 +28,7 @@ jobs:
 
       - name: Upload rapport Gitleaks vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.38.3
+        uses: github/codeql-action/upload-sarif@v4.39.0
         with:
           sarif_file: results.sarif
           category: gitleaks
@@ -71,7 +71,7 @@ jobs:
 
       - name: Upload du rapport vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.38.3
+        uses: github/codeql-action/upload-sarif@v4.39.0
         with:
           sarif_file: trivy-jeu.sarif
           category: trivy-jeu
@@ -141,7 +141,7 @@ jobs:
 
       - name: Upload du rapport vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.38.3
+        uses: github/codeql-action/upload-sarif@v4.39.0
         with:
           sarif_file: trivy-api.sarif
           category: trivy-api
@@ -164,14 +164,14 @@ jobs:
 
       - name: Upload rapport Bandit vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.38.3
+        uses: github/codeql-action/upload-sarif@v4.39.0
         with:
           sarif_file: bandit-report.sarif
           category: bandit
 
       - name: Upload rapport Semgrep vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.38.3
+        uses: github/codeql-action/upload-sarif@v4.39.0
         with:
           sarif_file: semgrep-report.sarif
           category: semgrep
