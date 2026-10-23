@@ -403,7 +403,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Scan Checkov des manifests Kubernetes
-        uses: bridgecrewio/checkov-action@v12.3133.0
+        uses: bridgecrewio/checkov-action@v12.3134.0
         with:
           directory: k8s/
           framework: kubernetes
@@ -412,7 +412,7 @@ jobs:
 
       - name: Scan Checkov du code Terraform
         if: always()
-        uses: bridgecrewio/checkov-action@v12.3133.0
+        uses: bridgecrewio/checkov-action@v12.3134.0
         with:
           directory: terraform/
           framework: terraform
