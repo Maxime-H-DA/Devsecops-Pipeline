@@ -3,7 +3,7 @@ FROM dhi.io/python:3.14.8-debian13-dev@sha256:c73dad82bf13f79fc2677318eb95c4a76c
 WORKDIR /app
 COPY rpg-api/requirements.txt .
 RUN python3 -m venv venv \
-    && venv/bin/pip install --no-cache-dir -r requirements.txt \
+    && venv/bin/pip install --no-cache-dir --require-hashes -r requirements.txt \
     && venv/bin/pip uninstall -y pip \
     && rm requirements.txt
 
