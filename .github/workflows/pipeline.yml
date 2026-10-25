@@ -159,11 +159,11 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Analyse Bandit (vulnérabilités Python)
-        run: pipx run --spec "bandit[sarif]" bandit -r rpg-api/ -ll -f sarif -o bandit-report.sarif
+        run: pipx run --spec "bandit[sarif]==1.9.4" bandit -r rpg-api/ -ll -f sarif -o bandit-report.sarif
 
       - name: Analyse Semgrep (SAST moderne)
         if: always()
-        run: pipx run semgrep scan --config auto rpg-api/ --error --sarif --output semgrep-report.sarif
+        run: pipx run --spec semgrep==1.181.0 semgrep scan --config auto rpg-api/ --error --sarif --output semgrep-report.sarif
 
       - name: Upload rapport Bandit vers l'onglet Security
         if: always()
