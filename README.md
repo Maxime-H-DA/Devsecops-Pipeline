@@ -1,5 +1,4 @@
 [![CI/CD](https://github.com/Maxime-H-DA/Devsecops-Pipeline/actions/workflows/pipeline.yml/badge.svg)](https://github.com/Maxime-H-DA/Devsecops-Pipeline/actions/workflows/pipeline.yml)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Maxime-H-DA/Devsecops-Pipeline/badge)](https://scorecard.dev/viewer/?uri=github.com/Maxime-H-DA/Devsecops-Pipeline)
 
 # DevSecOps Pipeline
 
