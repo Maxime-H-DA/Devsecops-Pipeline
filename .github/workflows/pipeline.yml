@@ -210,8 +210,12 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       issues: write
     steps:
+      - name: Téléchargement du code source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
       - name: Attente de cette version sur Render
         run: |
           for i in $(seq 1 30); do
@@ -230,6 +234,7 @@ jobs:
         uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
         with:
           target: 'https://rpg-pipeline.onrender.com'
+          rules_file_name: '.zap/rules.tsv'
           fail_action: false
           artifact_name: 'zap-scan-results'
 
