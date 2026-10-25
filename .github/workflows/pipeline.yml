@@ -200,7 +200,7 @@ jobs:
           python-version: '3.14'
 
       - name: Installation des dépendances
-        run: pip install -r rpg-api/requirements-dev.txt
+        run: pip install --require-hashes -r rpg-api/requirements-dev.txt
 
       - name: Lancement des tests unitaires
         run: python -m pytest rpg-api/tests/test_app.py -v --cov=app --cov-fail-under=95
