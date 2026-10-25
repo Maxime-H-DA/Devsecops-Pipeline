@@ -19,19 +19,19 @@ jobs:
       security-events: write
     steps:
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           submodules: true
           fetch-depth: 0
 
       - name: Détection de secrets dans le code
-        uses: gitleaks/gitleaks-action@v3
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload rapport Gitleaks vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.39.0
+        uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         with:
           sarif_file: results.sarif
           category: gitleaks
@@ -54,7 +54,7 @@ jobs:
       security-events: write
     steps:
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           submodules: true
 
@@ -62,7 +62,7 @@ jobs:
         run: docker build -t rpg-alterdune .
 
       - name: Scan de vulnérabilités du jeu
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: rpg-alterdune
           severity: HIGH,CRITICAL
@@ -74,7 +74,7 @@ jobs:
 
       - name: Upload du rapport vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.39.0
+        uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         with:
           sarif_file: trivy-jeu.sarif
           category: trivy-jeu
@@ -85,12 +85,12 @@ jobs:
       contents: read
     steps:
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           submodules: true
 
       - name: Connexion au registre des images durcies Docker
-        uses: docker/login-action@v4.2.0
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           registry: dhi.io
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -103,7 +103,7 @@ jobs:
         run: docker save rpg-api:ci -o rpg-api.tar
 
       - name: Partage de l'image avec les autres jobs
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: image-rpg-api
           path: rpg-api.tar
@@ -118,10 +118,10 @@ jobs:
     steps:
 
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Récupération de l'image de l'API
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: image-rpg-api
 
@@ -129,7 +129,7 @@ jobs:
         run: docker load -i rpg-api.tar
 
       - name: Scan de vulnérabilités de l'API
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         env:
           TRIVY_VEX: .vex/dhi-python-3.14.8-debian13.openvex.json
           TRIVY_IGNOREFILE: .trivyignore.yaml
@@ -144,7 +144,7 @@ jobs:
 
       - name: Upload du rapport vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.39.0
+        uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         with:
           sarif_file: trivy-api.sarif
           category: trivy-api
@@ -156,7 +156,7 @@ jobs:
       security-events: write
     steps:
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Analyse Bandit (vulnérabilités Python)
         run: pipx run --spec "bandit[sarif]" bandit -r rpg-api/ -ll -f sarif -o bandit-report.sarif
@@ -167,21 +167,21 @@ jobs:
 
       - name: Upload rapport Bandit vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.39.0
+        uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         with:
           sarif_file: bandit-report.sarif
           category: bandit
 
       - name: Upload rapport Semgrep vers l'onglet Security
         if: always()
-        uses: github/codeql-action/upload-sarif@v4.39.0
+        uses: github/codeql-action/upload-sarif@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
         with:
           sarif_file: semgrep-report.sarif
           category: semgrep
 
       - name: Upload rapports SAST bruts
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: sast-reports
           path: |
@@ -192,10 +192,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Installation de Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.14'
 
@@ -227,7 +227,7 @@ jobs:
 
       - name: OWASP ZAP sur l'API Render
         continue-on-error: true
-        uses: zaproxy/action-baseline@v0.15.0
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
         with:
           target: 'https://rpg-pipeline.onrender.com'
           fail_action: false
@@ -240,10 +240,10 @@ jobs:
       contents: read
     steps:
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Récupération de l'image de l'API
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: image-rpg-api
 
@@ -280,7 +280,7 @@ jobs:
           docker exec rpg-api-pr python -c "import urllib.request; urllib.request.urlopen('http://localhost:9100')"
 
       - name: OWASP ZAP sur l'API de la PR
-        uses: zaproxy/action-baseline@v0.15.0
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
         with:
           target: 'http://localhost:5000'
           rules_file_name: '.zap/rules.tsv'
@@ -315,14 +315,14 @@ jobs:
         run: echo "name=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/rpg-api" >> "$GITHUB_OUTPUT"
 
       - name: Connexion à GitHub Container Registry
-        uses: docker/login-action@v4.2.0
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Récupération de l'image testée
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: image-rpg-api
 
@@ -339,7 +339,7 @@ jobs:
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
 
       - name: Installation de Syft
-        uses: anchore/sbom-action/download-syft@v0.24.3
+        uses: anchore/sbom-action/download-syft@66cbf4bc1f1c0d2edc94016e65bc221b6bb0ad6c # v0.24.3
 
       - name: Génération du SBOM
         run: |
@@ -348,13 +348,13 @@ jobs:
             -o cyclonedx-json=sbom-rpg-api.cdx.json
 
       - name: Upload du SBOM en artefact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: sbom-rpg-api
           path: sbom-rpg-api.*.json
 
       - name: Installation de Cosign
-        uses: sigstore/cosign-installer@v4.1.2
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
 
       - name: Signature keyless de l'image (Sigstore)
         run: |
@@ -403,10 +403,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Scan Checkov des manifests Kubernetes
-        uses: bridgecrewio/checkov-action@v12.3134.0
+        uses: bridgecrewio/checkov-action@6f26dc90000b74feb589a906cdfae540f5119895 # v12.3134.0
         with:
           directory: k8s/
           framework: kubernetes
@@ -415,7 +415,7 @@ jobs:
 
       - name: Scan Checkov du code Terraform
         if: always()
-        uses: bridgecrewio/checkov-action@v12.3134.0
+        uses: bridgecrewio/checkov-action@6f26dc90000b74feb589a906cdfae540f5119895 # v12.3134.0
         with:
           directory: terraform/
           framework: terraform
@@ -426,10 +426,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Installation de la CLI Kyverno
-        uses: kyverno/action-install-cli@v0.2.0
+        uses: kyverno/action-install-cli@fcee92fca5c883169ef9927acf543e0b5fc58289 # v0.2.0
         with:
           release: 'v1.18.1'
 
@@ -459,10 +459,10 @@ jobs:
         working-directory: terraform
     steps:
       - name: Téléchargement du code source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Installation de Terraform
-        uses: hashicorp/setup-terraform@v4.0.1
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
         with:
           terraform_version: '1.16.2'
 
