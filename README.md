@@ -90,6 +90,7 @@ After a Docker or PC restart, start the Kind node, then unseal Vault:
 ```
 docker start rpg-pipeline-control-plane
 .\vault\unseal-vault.ps1
+kubectl delete pod -n rpg-pipeline --all
 ```
 
 </details>
