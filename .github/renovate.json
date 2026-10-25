@@ -1,0 +1,21 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": ["terraform"],
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
+  "dependencyDashboard": false,
+  "labels": ["dependencies"],
+  "commitMessagePrefix": "infra(deps):",
+  "packageRules": [
+    {
+      "matchManagers": ["terraform"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["terraform"],
+      "matchDepTypes": ["helm_release"],
+      "enabled": true,
+      "minimumReleaseAge": "7 days"
+    }
+  ]
+}
