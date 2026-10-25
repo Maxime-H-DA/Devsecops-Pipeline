@@ -1,4 +1,4 @@
-name: RPG
+name: CI/CD
 
 on:
   push:
