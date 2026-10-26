@@ -1,4 +1,3 @@
-vulnerabilities:
-  - id: CVE-2026-76957
-    expired_at: 2026-11-02
-    statement: "libexpat1 2.8.3+dhi5 dans l'image durcie Docker. Non atteignable : l'API ne lit jamais de XML (analyse statique du code et des dependances, analyse dynamique de toutes les routes : pyexpat jamais charge). Correctif Debian 2.9.0 pas encore integre par Docker et absent de son VEX. Exception datee pour forcer une reevaluation."
+   vulnerabilities:
+     - id: CVE-2026-76957
+       statement: "libexpat : l'API ne lit jamais de XML (vérifié en statique et en dynamique, pyexpat jamais chargé). Exception permanente : projet clôturé, plus de maintenance active."
