@@ -174,16 +174,16 @@
                 .join(", ");
 
             const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${m.nom}</td>
-                <td>${m.categorie}</td>
-                <td>${m.hp}</td>
-                <td>${m.atk}</td>
-                <td>${m.def}</td>
-                <td>${m.mercy}</td>
-                <td>${actions}</td>
-                <td></td>
-            `;
+            const valeurs = [m.nom, m.categorie, m.hp, m.atk, m.def, m.mercy, actions];
+
+            for (const valeur of valeurs)
+            {
+                const td = document.createElement("td");
+                td.textContent = valeur;
+                tr.appendChild(td);
+            }
+
+            tr.appendChild(document.createElement("td"));
 
             if (token)
             {
@@ -200,7 +200,7 @@
 
     async function supprimerMonstre(nom)
     {
-        const reponse = await fetch("/monstres/" + nom,
+        const reponse = await fetch("/monstres/" + encodeURIComponent(nom),
         {
             method: "DELETE",
             headers: { "Authorization": "Bearer " + token }

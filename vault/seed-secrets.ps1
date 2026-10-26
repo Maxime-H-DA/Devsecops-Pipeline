@@ -1,10 +1,18 @@
-$env = @{}
-Get-Content .env | Where-Object { $_ -match "=" } | ForEach-Object {
+$fichierEnv = Join-Path $PSScriptRoot "..\.env"
+if (-not (Test-Path $fichierEnv)) { throw "Fichier .env introuvable : $fichierEnv" }
+
+$valeurs = @{}
+Get-Content $fichierEnv -Encoding UTF8 | Where-Object { $_ -match "^\s*[^#].*=" } | ForEach-Object {
     $key, $value = $_ -split "=", 2
-    $env[$key] = $value
+    $valeurs[$key.Trim()] = $value.Trim().Trim('"', "'")
 }
 
-kubectl exec -n vault vault-0 -- vault kv put secret/rpg-api `
-  ADMIN_USERNAME="$($env['ADMIN_USERNAME'])" `
-  ADMIN_PASSWORD="$($env['ADMIN_PASSWORD'])" `
-  API_SECRET_KEY="$($env['API_SECRET_KEY'])"
+$secrets = @{}
+foreach ($nom in "ADMIN_USERNAME", "ADMIN_PASSWORD", "API_SECRET_KEY") {
+    if (-not $valeurs[$nom]) { throw "Variable $nom absente ou vide dans .env" }
+    $secrets[$nom] = $valeurs[$nom]
+}
+
+[Console]::InputEncoding = New-Object System.Text.UTF8Encoding $false
+$OutputEncoding = [Console]::InputEncoding
+$secrets | ConvertTo-Json -Compress | kubectl exec -i -n vault vault-0 -- vault kv put secret/rpg-api -

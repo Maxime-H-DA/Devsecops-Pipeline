@@ -2,6 +2,9 @@ injector:
   enabled: true
   webhook:
     failurePolicy: Fail
+  namespaceSelector:
+    matchLabels:
+      kubernetes.io/metadata.name: rpg-pipeline
   securityContext:
     container:
       runAsNonRoot: true
