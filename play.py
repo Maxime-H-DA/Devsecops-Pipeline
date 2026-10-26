@@ -10,6 +10,8 @@ print("Connexion a l'API en ligne...")
 try:
     with urllib.request.urlopen(API_URL, timeout=10) as reponse:  # nosec B310 - API_URL est une constante codee en dur, pas une entree utilisateur  # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
         monstres_api = json.loads(reponse.read().decode())
+    if not isinstance(monstres_api, list) or len(monstres_api) == 0:
+        raise ValueError("l'API a renvoye une liste vide ou invalide")
 
     monstres_locaux = []
     if os.path.exists(CSV_PATH):

@@ -2,20 +2,18 @@
 
 # DevSecOps Pipeline
 
-End-to-end DevSecOps platform, from commit to production: secure CI/CD pipeline, hardened Kubernetes deployment, infrastructure defined in Terraform, secrets in HashiCorp Vault, and monitoring with Prometheus/Grafana.
+A secure path from commit to production for a Flask API that serves the monsters of a C++ RPG game, live at [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com). The application is deliberately simple: the point is the platform around it, built the way an enterprise DevOps team would.
 
-All of it is applied to a Flask API running in production at [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com), which serves the monsters of a C++ RPG game. The goal wasn't the application itself, but to reproduce the practices of an enterprise DevOps team.
+## Highlights
 
-**At a glance**
-- 12 CI jobs on every push and pull request, 10 of them required to merge; the image is published and signed only if all checks pass
-- The Docker image is built once on a hardened base (no shell, no package manager, 3x fewer vulnerabilities), scanned (Trivy), attacked (OWASP ZAP), then signed (Cosign)
-- Only the image signed by the pipeline runs: Render deploys its exact digest, and the cluster picks up each new signed image automatically, verified by Kyverno
-- Runtime detection with Falco: an unexpected process in the API container or a late read of its secrets fires an alert
-- 60 unit tests (98% coverage) including attack tests, plus tests for the Kyverno policies and the Prometheus alerts
-- 189 Trivy alerts triaged, HTTP (ZAP) and Kubernetes (Checkov) misconfigurations fixed
-- 18 Terraform resources rebuild the platform; Argo CD deploys the application from Git
-- Argo CD keeps the cluster identical to Git: manual changes and deletions are reverted automatically
-- Secrets encrypted in Vault, never stored in Kubernetes Secrets or in Git
+- **CI/CD**: 12 GitHub Actions jobs on every push and pull request, 10 of them required to merge. The image is published and signed only if all checks pass.
+- **Container security**: the API image goes from 165 to 2 Trivy CVEs thanks to a Docker Hardened Image (no shell, no package manager). It is built once, scanned with Trivy, attacked with OWASP ZAP, then signed with Cosign along with its SBOM.
+- **Supply chain**: Render and the cluster run only the signed digest, and Kyverno blocks any unsigned image of the API.
+- **Infrastructure as code**: 19 Terraform resources rebuild the Kubernetes platform. Argo CD deploys the application from Git and reverts any manual change.
+- **Secrets**: encrypted in HashiCorp Vault and injected at startup, never stored in Git or in Kubernetes Secrets. The API has read-only, time-limited access, and its pods can only reach DNS and Vault.
+- **Runtime detection**: Falco flags any unexpected process in the API container or late read of its secrets.
+- **Tests**: 60 unit tests (98% coverage) including attack scenarios, plus tests for the Kyverno policies and the Prometheus alerts.
+- **Maintenance**: 189 Trivy alerts triaged on the game image, ZAP and Checkov findings fixed. Dependabot and Renovate keep dependencies up to date through the same checks.
 
 ## CI/CD Pipeline
 
@@ -42,20 +40,21 @@ push / pull request -> main
 On main, after the deployment, dast-api waits until Render serves this exact commit (/version), then scans it with OWASP ZAP, as monitoring.
 ```
 
-Scans run before the merge, not after, and Render no longer builds anything: it only deploys the image the pipeline has tested and signed. Pre-commit hooks rerun most of these checks locally before the push even happens, results show up in the **Security > Code scanning** tab, and Dependabot keeps dependencies up to date by going through the same checks.
+Findings are published in the **Security > Code scanning** tab, and pre-commit hooks run Gitleaks, Bandit, Semgrep, Checkov and Terraform formatting before each commit.
 
 ## Deployment
 
-Both methods need a `.env` file at the root of the repo with `API_SECRET_KEY`, `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Commands are for PowerShell (Windows).
+Both methods need Docker and a `.env` file at the root of the repo with `API_SECRET_KEY`, `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Commands are for PowerShell (Windows).
 
 ### Docker
 
-The quickest way to run the API locally.
+The quickest way to run the API locally. The base image comes from Docker Hardened Images, so `docker login dhi.io` needs a Docker account.
 
 <details>
 <summary>Commands</summary>
 
 ```
+docker login dhi.io
 docker build -t rpg-api -f rpg-api/Dockerfile .
 docker run -d -p 5000:5000 --env-file .env rpg-api
 ```
@@ -66,7 +65,7 @@ The API is available at **http://localhost:5000**
 
 ### Terraform and Vault
 
-Full version: Terraform rebuilds the platform (cluster, Kyverno, Vault, monitoring, Falco, Argo CD and Image Updater), and Argo CD deploys the application. The cluster runs the image signed by the pipeline, pulled from GitHub Container Registry; Kyverno verifies its signature before any pod starts. Secrets are encrypted in Vault and injected at pod startup by a sidecar; each pod authenticates with its own ServiceAccount, with read-only, time-limited access. Outbound traffic is restricted: pods can only reach the cluster DNS and Vault.
+The full platform: Terraform builds a Kind cluster with Kyverno, Vault, monitoring, Falco and Argo CD, then Argo CD deploys the API. Also requires Terraform and kubectl.
 
 <details>
 <summary>Commands</summary>
@@ -85,13 +84,16 @@ kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
 
 `init-vault.ps1` initializes and configures Vault, loads the secrets from `.env`, then revokes the root token. The unseal keys are encrypted with Windows DPAPI and stored in `.vault-keys/`, ignored by Git.
 
-After a Docker or PC restart, start the Kind node, then unseal Vault:
+</details>
+
+<details>
+<summary>After a Docker or PC restart</summary>
 
 ```
-docker start rpg-pipeline-control-plane
 .\vault\unseal-vault.ps1
-kubectl delete pod -n rpg-pipeline --all
 ```
+
+The script restarts the cluster, unseals Vault and restarts the API.
 
 </details>
 
@@ -99,7 +101,7 @@ The API is available at **http://localhost:5000**
 
 ## GitOps
 
-Argo CD deploys the application from `k8s/` on the `main` branch, so only code that has passed every check reaches the cluster. It keeps the cluster identical to Git: a manual change or a deleted resource is reverted automatically, within seconds. Terraform builds the platform, Argo CD manages the application, and Kyverno still checks everything Argo CD creates. Argo CD Image Updater watches the `main` tag on GitHub Container Registry: when the pipeline signs a new image, it records the new digest and Argo CD deploys it, with no manual step.
+Argo CD deploys `k8s/` from the `main` branch and keeps the cluster identical to Git. Argo CD Image Updater deploys each new signed image automatically.
 
 <details>
 <summary>Commands</summary>
@@ -116,7 +118,7 @@ Argo CD is available at **https://localhost:8080** (user `admin`, self-signed ce
 
 ## Monitoring
 
-Prometheus collects cluster state and API metrics, and Grafana displays them in dashboards. An alert fires when there are more than 10 rejected logins within 5 minutes. Falco detections raise alerts too, as does Falco itself going silent.
+Prometheus collects cluster and API metrics, and Grafana displays them. Alerts fire on more than 10 rejected logins within 5 minutes, on Falco detections, and when Falco goes silent.
 
 <details>
 <summary>Commands</summary>
@@ -138,15 +140,12 @@ Grafana is available at **http://localhost:3000** (user `admin`), Prometheus at 
 py play.py
 ```
 
-The script fetches the monsters from the live API and updates `monsters.csv` before launching the game.
+The script fetches the monsters from the live API and updates the game's `monsters.csv`. Game code (S6 project): [Alterdune](https://github.com/Maxime-H-DA/Alterdune)
+
 
 ## Tools Used
 
-- **CI/CD & infrastructure**: GitHub Actions, Docker, Docker Hardened Images, Kubernetes (Kind), Helm, Terraform, Argo CD, Alpine Linux, Dependabot
+- **CI/CD & infrastructure**: GitHub Actions, Docker, Docker Hardened Images, Kubernetes (Kind), Helm, Terraform, Argo CD, Alpine Linux, Dependabot, Renovate
 - **Security**: Gitleaks, Trivy, Bandit, Semgrep, OWASP ZAP, Cppcheck, Checkov, Kyverno, Falco, Syft, Cosign, HashiCorp Vault
 - **Backend & testing**: Flask, Gunicorn, SQLite, JWT, pytest
 - **Observability**: Prometheus, Grafana
-
-## Source Project
-
-The RPG game code (S6 project): [Alterdune](https://github.com/Maxime-H-DA/Alterdune)
