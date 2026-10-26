@@ -129,7 +129,7 @@ resource "helm_release" "argocd_image_updater" {
   name       = "argocd-image-updater"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argocd-image-updater"
-  version    = "1.3.1"
+  version    = "1.3.2"
   namespace  = "argocd"
   timeout    = 900
   depends_on = [helm_release.argocd]
