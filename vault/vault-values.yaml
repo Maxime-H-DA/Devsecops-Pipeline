@@ -19,3 +19,6 @@ server:
       runAsNonRoot: true
       runAsUser: 100
       allowPrivilegeEscalation: false
+  auditStorage:
+    enabled: true
+    size: 1Gi
