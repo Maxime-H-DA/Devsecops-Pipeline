@@ -414,7 +414,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Scan Checkov des manifests Kubernetes
-        uses: bridgecrewio/checkov-action@6f26dc90000b74feb589a906cdfae540f5119895 # v12.3134.0
+        uses: bridgecrewio/checkov-action@c3e106d5f8f4253a6de5110efb41a080f83db294 # v12.3135.0
         with:
           directory: k8s/
           framework: kubernetes
@@ -423,7 +423,7 @@ jobs:
 
       - name: Scan Checkov du code Terraform
         if: always()
-        uses: bridgecrewio/checkov-action@6f26dc90000b74feb589a906cdfae540f5119895 # v12.3134.0
+        uses: bridgecrewio/checkov-action@c3e106d5f8f4253a6de5110efb41a080f83db294 # v12.3135.0
         with:
           directory: terraform/
           framework: terraform
