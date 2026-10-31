@@ -34,10 +34,11 @@ push / pull request -> main
  |    |-- scan-api: Trivy
  |    `-- dast-api-local: smoke test + OWASP ZAP against the running container
  |
- `-- step 3, on main only, if everything passed:
-      `-- supply-chain-api: publishing, SBOM (Syft), signing and SBOM attestation (Cosign), deployment to Render
-
-On main, after the deployment, dast-api waits until Render serves this exact commit (/version), then scans it with OWASP ZAP, as monitoring.
+ |-- step 3, on main only, if everything passed:
+ |    `-- supply-chain-api: publishing, SBOM (Syft), signing and SBOM attestation (Cosign), deployment to Render
+ |
+ `-- step 4, on main only, after the deployment:
+      `-- dast-api: waits until Render serves this exact commit (/version), then OWASP ZAP against production, as monitoring
 ```
 
 Findings are published in the **Security > Code scanning** tab, and pre-commit hooks run Gitleaks, Bandit, Semgrep, Checkov and Terraform formatting before each commit.
