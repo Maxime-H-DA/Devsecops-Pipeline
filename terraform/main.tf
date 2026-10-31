@@ -88,7 +88,7 @@ resource "helm_release" "falco" {
   name             = "falco"
   repository       = "https://falcosecurity.github.io/charts"
   chart            = "falco"
-  version          = "9.2.0"
+  version          = "9.2.1"
   namespace        = "falco"
   create_namespace = true
   values           = [file("${path.module}/../falco/values.yaml")]
@@ -107,7 +107,7 @@ resource "helm_release" "argocd" {
   name             = "argocd"
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
-  version          = "10.10.5"
+  version          = "10.11.1"
   namespace        = "argocd"
   create_namespace = true
   timeout          = 900
