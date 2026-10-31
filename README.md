@@ -1,58 +1,58 @@
 [![CI/CD](https://github.com/Maxime-H-DA/Devsecops-Pipeline/actions/workflows/pipeline.yml/badge.svg)](https://github.com/Maxime-H-DA/Devsecops-Pipeline/actions/workflows/pipeline.yml)
 
-# DevSecOps Pipeline
+# Pipeline DevSecOps
 
-A secure path from commit to production for a Flask API that serves the monsters of a C++ RPG game, live at [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com). The application is deliberately simple: the point is the platform around it, built the way an enterprise DevOps team would.
+Un chemin sécurisé du commit à la production pour une API Flask qui sert les monstres d'un jeu RPG en C++, en ligne sur [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com). L'application est volontairement simple : l'intérêt est la plateforme qui l'entoure, construite comme le ferait une équipe DevOps en entreprise.
 
-## Highlights
+## Points clés
 
-- **CI/CD**: 12 GitHub Actions jobs on every push and pull request, 10 of them required to merge. The image is published and signed only if all checks pass.
-- **Container security**: the API image goes from 165 to 2 Trivy CVEs thanks to a Docker Hardened Image (no shell, no package manager). It is built once, scanned with Trivy, attacked with OWASP ZAP, then signed with Cosign along with its SBOM.
-- **Supply chain**: Render and the cluster run only the signed digest, and Kyverno blocks any unsigned image of the API.
-- **Infrastructure as code**: 19 Terraform resources rebuild the Kubernetes platform. Argo CD deploys the application from Git and reverts any manual change.
-- **Secrets**: encrypted in HashiCorp Vault and injected at startup, never stored in Git or in Kubernetes Secrets. The API has read-only, time-limited access, and its pods can only reach DNS and Vault.
-- **Runtime detection**: Falco flags any unexpected process in the API container or late read of its secrets.
-- **Tests**: 60 unit tests (98% coverage) including attack scenarios, plus tests for the Kyverno policies and the Prometheus alerts.
-- **Maintenance**: 189 Trivy alerts triaged on the game image, ZAP and Checkov findings fixed. Dependabot and Renovate keep dependencies up to date through the same checks.
+- **CI/CD** : 12 jobs GitHub Actions à chaque push et pull request, dont 10 obligatoires pour merger. L'image n'est publiée et signée que si toutes les vérifications passent.
+- **Sécurité des conteneurs** : l'image de l'API passe de 165 à 2 CVE Trivy grâce à une Docker Hardened Image (sans shell, sans gestionnaire de paquets). Elle est construite une seule fois, scannée avec Trivy, attaquée avec OWASP ZAP, puis signée avec Cosign avec son SBOM.
+- **Chaîne d'approvisionnement** : Render et le cluster n'exécutent que le digest signé, et Kyverno bloque toute image non signée de l'API.
+- **Infrastructure as code** : 19 ressources Terraform reconstruisent la plateforme Kubernetes. Argo CD déploie l'application depuis Git et annule toute modification manuelle.
+- **Secrets** : chiffrés dans HashiCorp Vault et injectés au démarrage, jamais stockés dans Git ni dans des Secrets Kubernetes. L'API a un accès en lecture seule et limité dans le temps, et ses pods ne peuvent joindre que le DNS et Vault.
+- **Détection à l'exécution** : Falco signale tout processus inattendu dans le conteneur de l'API ou toute lecture tardive de ses secrets.
+- **Tests** : 60 tests unitaires (98 % de couverture) incluant des scénarios d'attaque, plus des tests pour les politiques Kyverno et les alertes Prometheus.
+- **Maintenance** : 189 alertes Trivy triées sur l'image du jeu, findings ZAP et Checkov corrigés. Dependabot et Renovate maintiennent les dépendances à jour en passant par les mêmes vérifications.
 
-## CI/CD Pipeline
+## Pipeline CI/CD
 
 ```
 push / pull request -> main
  |
- |-- step 1, in parallel:
- |    |-- analyse-code: Gitleaks + Cppcheck (C++ code)
- |    |-- scan-jeu: Docker build (game) + Trivy
+ |-- étape 1, en parallèle :
+ |    |-- analyse-code: Gitleaks + Cppcheck (code C++)
+ |    |-- scan-jeu: build Docker (jeu) + Trivy
  |    |-- sast-api: Bandit + Semgrep
- |    |-- tests-api: pytest, minimum 95% coverage
- |    |-- iac-scan-checkov: Kubernetes manifests and Terraform
- |    |-- kyverno-policy-test: Kyverno policy tests + Prometheus alert unit tests
- |    |-- terraform-check: Terraform code formatting and validation
- |    `-- build-api: Docker build of the API, done once
+ |    |-- tests-api: pytest, couverture minimum 95 %
+ |    |-- iac-scan-checkov: manifests Kubernetes et Terraform
+ |    |-- kyverno-policy-test: tests des politiques Kyverno + tests unitaires des alertes Prometheus
+ |    |-- terraform-check: formatage et validation du code Terraform
+ |    `-- build-api: build Docker de l'API, fait une seule fois
  |
- |-- step 2, on the image built in step 1:
+ |-- étape 2, sur l'image construite à l'étape 1 :
  |    |-- scan-api: Trivy
- |    `-- dast-api-local: smoke test + OWASP ZAP against the running container
+ |    `-- dast-api-local: smoke test + OWASP ZAP contre le conteneur en cours d'exécution
  |
- |-- step 3, on main only, if everything passed:
- |    `-- supply-chain-api: publishing, SBOM (Syft), signing and SBOM attestation (Cosign), deployment to Render
+ |-- étape 3, sur main uniquement, si tout est passé :
+ |    `-- supply-chain-api: publication, SBOM (Syft), signature et attestation du SBOM (Cosign), déploiement sur Render
  |
- `-- step 4, on main only, after the deployment:
-      `-- dast-api: waits until Render serves this exact commit (/version), then OWASP ZAP against production, as monitoring
+ `-- étape 4, sur main uniquement, après le déploiement :
+      `-- dast-api: attend que Render serve exactement ce commit (/version), puis OWASP ZAP contre la production, en tant que surveillance
 ```
 
-Findings are published in the **Security > Code scanning** tab, and pre-commit hooks run Gitleaks, Bandit, Semgrep, Checkov and Terraform formatting before each commit.
+Les findings sont publiés dans l'onglet **Security > Code scanning**, et des hooks pre-commit exécutent Gitleaks, Bandit, Semgrep, Checkov et le formatage Terraform avant chaque commit.
 
-## Deployment
+## Déploiement
 
-Both methods need Docker and a `.env` file at the root of the repo with `API_SECRET_KEY`, `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Commands are for PowerShell (Windows).
+Les deux méthodes nécessitent Docker et un fichier `.env` à la racine du repo avec `API_SECRET_KEY`, `ADMIN_USERNAME` et `ADMIN_PASSWORD`. Les commandes sont pour PowerShell (Windows).
 
 ### Docker
 
-The quickest way to run the API locally. The base image comes from Docker Hardened Images, so `docker login dhi.io` needs a Docker account.
+La façon la plus rapide de lancer l'API en local. L'image de base provient de Docker Hardened Images, donc `docker login dhi.io` nécessite un compte Docker.
 
 <details>
-<summary>Commands</summary>
+<summary>Commandes</summary>
 
 ```
 docker login dhi.io
@@ -62,14 +62,14 @@ docker run -d -p 5000:5000 --env-file .env rpg-api
 
 </details>
 
-The API is available at **http://localhost:5000**
+L'API est disponible sur **http://localhost:5000**
 
-### Terraform and Vault
+### Terraform et Vault
 
-The full platform: Terraform builds a Kind cluster with Kyverno, Vault, monitoring, Falco and Argo CD, then Argo CD deploys the API. Also requires Terraform and kubectl.
+La plateforme complète : Terraform construit un cluster Kind avec Kyverno, Vault, le monitoring, Falco et Argo CD, puis Argo CD déploie l'API. Nécessite aussi Terraform et kubectl.
 
 <details>
-<summary>Commands</summary>
+<summary>Commandes</summary>
 
 ```
 cd terraform
@@ -83,29 +83,29 @@ cd ..
 kubectl port-forward -n rpg-pipeline svc/rpg-api 5000:80
 ```
 
-`init-vault.ps1` initializes and configures Vault, loads the secrets from `.env`, then revokes the root token. The unseal keys are encrypted with Windows DPAPI and stored in `.vault-keys/`, ignored by Git.
+`init-vault.ps1` initialise et configure Vault, charge les secrets depuis `.env`, puis révoque le root token. Les clés d'unseal sont chiffrées avec Windows DPAPI et stockées dans `.vault-keys/`, ignoré par Git.
 
 </details>
 
 <details>
-<summary>After a Docker or PC restart</summary>
+<summary>Après un redémarrage de Docker ou du PC</summary>
 
 ```
 .\vault\unseal-vault.ps1
 ```
 
-The script restarts the cluster, unseals Vault and restarts the API.
+Le script redémarre le cluster, unseal Vault et redémarre l'API.
 
 </details>
 
-The API is available at **http://localhost:5000**
+L'API est disponible sur **http://localhost:5000**
 
 ## GitOps
 
-Argo CD deploys `k8s/` from the `main` branch and keeps the cluster identical to Git. Argo CD Image Updater deploys each new signed image automatically.
+Argo CD déploie `k8s/` depuis la branche `main` et maintient le cluster identique à Git. Argo CD Image Updater déploie automatiquement chaque nouvelle image signée.
 
 <details>
-<summary>Commands</summary>
+<summary>Commandes</summary>
 
 ```
 $pw = kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}"
@@ -115,14 +115,14 @@ kubectl port-forward -n argocd svc/argocd-server 8080:443
 
 </details>
 
-Argo CD is available at **https://localhost:8080** (user `admin`, self-signed certificate).
+Argo CD est disponible sur **https://localhost:8080** (utilisateur `admin`, certificat auto-signé).
 
 ## Monitoring
 
-Prometheus collects cluster and API metrics, and Grafana displays them. Alerts fire on more than 10 rejected logins within 5 minutes, on Falco detections, and when Falco goes silent.
+Prometheus collecte les métriques du cluster et de l'API, et Grafana les affiche. Des alertes se déclenchent au-delà de 10 connexions refusées en 5 minutes, sur les détections Falco, et quand Falco devient silencieux.
 
 <details>
-<summary>Commands</summary>
+<summary>Commandes</summary>
 
 ```
 $pw = kubectl get secret monitoring-grafana -n monitoring -o jsonpath="{.data.admin-password}"
@@ -133,20 +133,20 @@ kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 909
 
 </details>
 
-Grafana is available at **http://localhost:3000** (user `admin`), Prometheus at **http://localhost:9090**. Each `port-forward` takes up its own terminal.
+Grafana est disponible sur **http://localhost:3000** (utilisateur `admin`), Prometheus sur **http://localhost:9090**. Chaque `port-forward` occupe son propre terminal.
 
-## Game Sync
+## Synchronisation du jeu
 
 ```
 py play.py
 ```
 
-The script fetches the monsters from the live API and updates the game's `monsters.csv`. Game code (S6 project): [Alterdune](https://github.com/Maxime-H-DA/Alterdune)
+Le script récupère les monstres depuis l'API en ligne et met à jour le fichier `monsters.csv` du jeu. Code du jeu (projet S6) : [Alterdune](https://github.com/Maxime-H-DA/Alterdune)
 
 
-## Tools Used
+## Outils utilisés
 
-- **CI/CD & infrastructure**: GitHub Actions, Docker, Docker Hardened Images, Kubernetes (Kind), Helm, Terraform, Argo CD, Alpine Linux, Dependabot, Renovate
-- **Security**: Gitleaks, Trivy, Bandit, Semgrep, OWASP ZAP, Cppcheck, Checkov, Kyverno, Falco, Syft, Cosign, HashiCorp Vault
-- **Backend & testing**: Flask, Gunicorn, SQLite, JWT, pytest
-- **Observability**: Prometheus, Grafana
+- **CI/CD & infrastructure** : GitHub Actions, Docker, Docker Hardened Images, Kubernetes (Kind), Helm, Terraform, Argo CD, Alpine Linux, Dependabot, Renovate
+- **Sécurité** : Gitleaks, Trivy, Bandit, Semgrep, OWASP ZAP, Cppcheck, Checkov, Kyverno, Falco, Syft, Cosign, HashiCorp Vault
+- **Backend & tests** : Flask, Gunicorn, SQLite, JWT, pytest
+- **Observabilité** : Prometheus, Grafana
