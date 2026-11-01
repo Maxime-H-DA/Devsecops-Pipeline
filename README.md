@@ -1,6 +1,6 @@
 [![CI/CD](https://github.com/Maxime-H-DA/Devsecops-Pipeline/actions/workflows/pipeline.yml/badge.svg)](https://github.com/Maxime-H-DA/Devsecops-Pipeline/actions/workflows/pipeline.yml)
 
-# Pipeline DevSecOps
+# DevSecOps Pipeline
 
 Un chemin sécurisé du commit à la production pour une API Flask qui sert les monstres d'un jeu RPG en C++, en ligne sur [rpg-pipeline.onrender.com](https://rpg-pipeline.onrender.com). L'application est volontairement simple : l'intérêt est la plateforme qui l'entoure, construite comme le ferait une équipe DevOps en entreprise.
 
